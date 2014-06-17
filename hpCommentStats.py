@@ -57,7 +57,7 @@ def wordLookup(word):
 #http://www.cs.cmu.edu/~biglou/resources/bad-words.txt
 
 
-queue=file_contents("C:/Users/Rolf/Documents/c&d/bad-words.txt")
+queue=file_contents("bad-words.txt")
 profanity=queue.splitlines()
 profanity=profanity[1:]
 
