@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#Comment stats functions
 import codecs
 import pymongo
 from pymongo import MongoClient
@@ -9,18 +11,17 @@ from nltk.corpus import cmudict
 import ner
 from hpfunctions import stripWhite, file_contents
 import string
+import enchant
+ukDict = enchant.Dict("en_UK")
+usDict = enchant.Dict("en_US")
 
-client = MongoClient()
-db = client['hp-database']
-counter=0
+queue=file_contents("bad-words.txt")
+profanity=queue.splitlines()
+profanity=profanity[1:]
 
 
 tagger = ner.SocketNER(host='localhost', port=8089)
-tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-#To start server
-#java -mx1000m -cp stanford-ner.jar edu.stanford.nlp.ie.NERServer -loadClassifier classifiers/english.conll.4class.distsim.crf.ser.gz -port 8089 -outputFormat inlineXML
 
-#Functions for working with named entity recognition system
 def getPosLen(a):
 	count=0
 	for i in a:
@@ -38,28 +39,6 @@ def removePos(text,a):
 		text=re.sub(i," ",text)
 	return stripWhite(text)
 
-#Functions for spellchecker
-import enchant
-ukDict = enchant.Dict("en_UK")
-usDict = enchant.Dict("en_US")
-def wordLookup(word):
-	if usDict.check(word):
-		return True
-	if ukDict.check(word):
-		return True
-	#print word
-	return False
-
-#Profanity, hostility
-#A list of 1,300+ English terms that could be found offensive. 
-#The list contains some words that many people won't find offensive, 
-#but it's a good start for anybody wanting to block offensive or profane terms on their Site.
-#http://www.cs.cmu.edu/~biglou/resources/bad-words.txt
-
-
-queue=file_contents("bad-words.txt")
-profanity=queue.splitlines()
-profanity=profanity[1:]
 
 #syllables
 from nltk.corpus import cmudict
@@ -127,57 +106,61 @@ def getBaseStats(comment):
 
 
 
+
+
+def getCommentStats(out):
+	tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+	results=[]
+	for comment in out:
+		text=comment["text"]
+		nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+		nComma=text.count(",")
+		nSent=len(tokenizer.tokenize(text))
+		TAG_RE = re.compile(r'<.*>')
+		text=TAG_RE.sub('', text)
+		text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
+		text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
+		text=enc_trans(text)
+		avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+		try:
+			avWordLen=sum([len(x) for x in words])/float(len(words))
+		except: avWordLen=0
+		nOffensive =  len(set(profanity).intersection(text.lower().split()))
+		avSyllables,threeSylPlus=sylList(words)
+		result={"_id":comment["_id"],
+				"entry_id":comment["entry_id"],
+				"parent_id": comment["parent_id"],
+				"user_id": comment["user_id"],
+				"created_at": comment["created_at"],
+				"nWords": nWords,
+				"typos": typos,
+				"caps": caps,
+				"nPunct": nPunct,
+				"nNames": nNames,
+				"nComma": nComma,
+				"nSent": nSent,
+				"avSentLen": avSentLen,
+				"avWordLen": avWordLen,
+				"nOffensive": nOffensive,
+				"avSyllables": avSyllables,
+				"threeSylPlus": threeSylPlus
+				}
+		counter=0
+		results.append(result)
+	return results
+
+
+def wordLookup(word):
+	if usDict.check(word):
+		return True
+	if ukDict.check(word):
+		return True
+	#print word
+	return False
+
 #To remove punctuation
 punct=string.punctuation
 punct=re.sub("'","",punct)
 def enc_trans(s):
 	s = s.encode('utf-8').translate(None, punct)
 	return s.decode('utf-8')
-
-
-writer=open("commentStats.txt","w+")
-writer.write("_id	entry_id	parent_id	user_id	created_at	nWords	typos	caps	nPunct	nNames	nComma	nSent	avSentLen	avWordLen	nOffensive	avSyllables	threeSylPlus\n")
-keepTrack=0
-startAt=3908249
-go=False
-for entry in db.metadatadb.find({"comments":{"$exists":True},"nComments":{"$gt":0}}):
-	if go==True:
-		out=entry["comments"]
-		print("started")
-		if len(out)>0:
-			for comment in out:
-				tt=comment["text"]
-				nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
-				nComma=tt.count(",")
-				nSent=len(tokenizer.tokenize(tt))
-	            TAG_RE = re.compile(r'<.*>')
-	            text=TAG_RE.sub('', text)
-	            text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
-	            text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
-	            avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
-	            try:
-	            	avWordLen=sum([len(x) for x in words])/float(len(words))
-				except: avWordLen=0
-				nOffensive =  len(set(profanity).intersection(tt.lower().split()))
-				avSyllables,threeSylPlus=sylList(words)
-				result=[comment["_id"],
-						comment["entry_id"],
-						comment["parent_id"],
-						comment["user_id"],
-						comment["created_at"],
-						nWords,
-						typos,
-						caps,
-						nPunct,nNames,nComma,nSent,avSentLen,avWordLen,nOffensive,avSyllables,threeSylPlus]
-				counter=0
-				for i in result:
-					counter+=1
-					if counter>1:
-						writer.write("\t"+str(i))
-					else: writer.write(str(i))
-				writer.write("\n")
-	if keepTrack %10==0:print keepTrack
-	keepTrack+=1
-	if int(entry["_id"])==3908249:
-		go=True
-writer.close()
