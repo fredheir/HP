@@ -163,8 +163,8 @@ def addToQueue3(url):
 def commentSelector(d,_id,url):
 	print int(d.strftime("%Y%m%d"))
 	if int(d.strftime("%Y%m%d"))<20140605:
-		coms=getComments(_id)
 		print("getting conventional comments")
+		coms=getComments(_id)
 	if int(d.strftime("%Y%m%d"))>20140604 and int(d.strftime("%Y%m%d"))<20140612:
 		print("getting both comments")
 		coms=getComments(_id)

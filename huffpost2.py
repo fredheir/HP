@@ -10,97 +10,115 @@
 #do comment levels recover after a rule change?
 #Are certain subjects more susceptible to spamming / self-censorship, and is this showsn by rule changes?
 
-
-
 from hpfunctions import *
 from commentStats import *
 from datetime import date, timedelta, datetime
 
 
-import pymongo
-from pymongo import MongoClient
-client = MongoClient()
-db = client['hp']
 
-db.metadatadb.create_index([("_id", pymongo.DESCENDING)])
-d = datetime.strptime("20130101", "%Y%m%d")
-
-# queue=loadQueue
-
-# #write queue
-# writeQueue(file="queue.txt",output=queue)
+def executeScript(d):
 
 
-def archive(db,metaData):
-	print ("entering metaData")
-	if len (metaData)>0:
-		try: 
-			db.metadatadb.insert(metaData,continue_on_error=True)
-		except pymongo.errors.DuplicateKeyError:pass
+	import pymongo
+	from pymongo import MongoClient
+	client = MongoClient()
+	db = client['hp']
+
+	db.metadatadb.create_index([("_id", pymongo.DESCENDING)])
+	#d = datetime.strptime("20130101", "%Y%m%d")
+	d = datetime.strptime(d, "%Y%m%d")
+
+	# queue=loadQueue
+
+	# #write queue
+	# writeQueue(file="queue.txt",output=queue)
 
 
-def checkAllIn(db,metaData):
-	counter=0
-	for i in range(len(metaData)):
-		if db.metadatadb.find({"_id":metaData[i]["_id"]}).limit(1).count() ==0:
-			print "missing meta: "+str(metaData[i]["_id"])
-			counter+=1
-	print("total number of missing entries: "+str(counter))
+	def archive(db,metaData):
+		print ("entering metaData")
+		if len (metaData)>0:
+			try: 
+				db.metadatadb.insert(metaData,continue_on_error=True)
+			except pymongo.errors.DuplicateKeyError:pass
 
-def findLastCompleteDay(db):
-	minDate=20110101
-	for i in db.metadatadb.find():
-		try:
-			t=int(i["date"])
-		except:
-			t=huffTime(i["date"])
-		if t>minDate:
-			minDate=t
-	return(str(minDate))
 
-#StartDate = findLastCompleteDay(db)
-#d = datetime.strptime(StartDate, "%Y%m%d")
-print "starting collection from "+str(d)
+	def checkAllIn(db,metaData):
+		counter=0
+		for i in range(len(metaData)):
+			if db.metadatadb.find({"_id":metaData[i]["_id"]}).limit(1).count() ==0:
+				print "missing meta: "+str(metaData[i]["_id"])
+				counter+=1
+		print("total number of missing entries: "+str(counter))
 
-#metaData=addOneDay(d)
-#tagdb={} #make this a list
-todo=[]
-metaData=[]
-baseUrls=getBaseLinks(d)
-while True:
-	print("topping up")
-	counter=0
-	d=d+timedelta(days=1)
-	print ("new Day!!: "+str(d))
-	m=addOneDay2(d,baseUrls,db)
-	todo=m
-	print "new files added (should be at least twenty): "+str(len(todo))
-	print("Comment downloading about to start. Number of articles downloaded and in queue for comment fetching: "+str(len(metaData)))
-	for i in range(len(todo)):
-		counter +=1
-		_id=todo[i]["_id"]
-		print "\nstarting file " +str(_id)
-		if counter %10==0:
-			print("Number of articles downloaded: "+str(len(metaData)))
-			print("number of files before topup: "+str(len(todo)-counter))
-		if type(_id) != 'NoneType' and db.metadatadb.find({"_id":_id}).limit(1).count() ==0  and todo[i]["url"] !="none":
-			coms=commentSelector(d,_id,todo[i]["url"])
-			comStats=getCommentStats(coms)		
-			if len (comStats)>0:
-				try: 
-					db.comStats.insert(comStats,continue_on_error=True)
-				except pymongo.errors.DuplicateKeyError:pass
-			todo[i]["comments"]=coms
-			todo[i]["nComments"]=len(coms)
-		else: print "duplicated entry skipped"
-		metaData.append(todo[i])
+	def findLastCompleteDay(db):
+		minDate=20110101
+		for i in db.metadatadb.find():
+			try:
+				t=int(i["date"])
+			except:
+				t=huffTime(i["date"])
+			if t>minDate:
+				minDate=t
+		return(str(minDate))
 
-	#d=dateUp(d)
-	archive(db,metaData)
-	checkAllIn(db,metaData)
+	#StartDate = findLastCompleteDay(db)
+	#d = datetime.strptime(StartDate, "%Y%m%d")
+	print "starting collection from "+str(d)
+
+	#metaData=addOneDay(d)
+	#tagdb={} #make this a list
+	todo=[]
 	metaData=[]
+	baseUrls=getBaseLinks(d)
+	while True:
+		print("topping up")
+		counter=0
+		d=d+timedelta(days=1)
+		print ("new Day!!: "+str(d))
+		m=addOneDay2(d,baseUrls,db)
+		todo=m
+		print "new files added (should be at least twenty): "+str(len(todo))
+		print("Comment downloading about to start. Number of articles downloaded and in queue for comment fetching: "+str(len(metaData)))
+		for i in range(len(todo)):
+			counter +=1
+			_id=todo[i]["_id"]
+			print "\nstarting file " +str(_id)
+			if counter %10==0:
+				print("Number of articles downloaded: "+str(len(metaData)))
+				print("number of files before topup: "+str(len(todo)-counter))
+			if type(_id) != 'NoneType' and db.metadatadb.find({"_id":_id}).limit(1).count() ==0  and todo[i]["url"] !="none":
+				coms=commentSelector(d,_id,todo[i]["url"])
+				comStats=getCommentStats(coms)		
+				if len (comStats)>0:
+					try: 
+						db.comStats.insert(comStats,continue_on_error=True)
+					except pymongo.errors.DuplicateKeyError:pass
+				todo[i]["comments"]=coms
+				todo[i]["nComments"]=len(coms)
+			else: print "duplicated entry skipped"
+			metaData.append(todo[i])
 
+		#d=dateUp(d)
+		archive(db,metaData)
+		checkAllIn(db,metaData)
+		metaData=[]
 
+def main(argv=None):#take input file
+    if argv is None:
+        argv =sys.argv
+        
+    if not argv[1:]:
+    	print "enter start date in format 20130131"
+        sys.exit()
+
+    date=argv[1]
+
+    print executeScript(date)
+    
+
+if __name__ == "__main__":
+    sys.exit(main())
+    
 #Think about schema design: can i search tags? Also 
 	#Add 
 
