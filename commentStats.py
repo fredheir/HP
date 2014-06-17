@@ -72,7 +72,9 @@ def getBaseStats(comment):
 	caps=0
 	nWords=0
 	recList=[]
-	out=stripWhite(comment["text"])
+	try:
+		out=stripWhite(comment["text"])
+	except: out= stripWhite(comment["message"])
 	p1=len(out)
 	out=re.sub('/', ' ', out)
 	out=re.sub('-', ' ', out)
@@ -112,41 +114,78 @@ def getCommentStats(out):
 	tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 	results=[]
 	for comment in out:
-		text=comment["text"]
-		nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
-		nComma=text.count(",")
-		nSent=len(tokenizer.tokenize(text))
-		TAG_RE = re.compile(r'<.*>')
-		text=TAG_RE.sub('', text)
-		text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
-		text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
-		text=enc_trans(text)
-		avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
-		try:
-			avWordLen=sum([len(x) for x in words])/float(len(words))
-		except: avWordLen=0
-		nOffensive =  len(set(profanity).intersection(text.lower().split()))
-		avSyllables,threeSylPlus=sylList(words)
-		result={"_id":comment["_id"],
-				"entry_id":comment["entry_id"],
-				"parent_id": comment["parent_id"],
-				"user_id": comment["user_id"],
-				"created_at": comment["created_at"],
-				"nWords": nWords,
-				"typos": typos,
-				"caps": caps,
-				"nPunct": nPunct,
-				"nNames": nNames,
-				"nComma": nComma,
-				"nSent": nSent,
-				"avSentLen": avSentLen,
-				"avWordLen": avWordLen,
-				"nOffensive": nOffensive,
-				"avSyllables": avSyllables,
-				"threeSylPlus": threeSylPlus
-				}
-		counter=0
-		results.append(result)
+		if "text" in comment:
+			text=comment["text"]
+			nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+			nComma=text.count(",")
+			nSent=len(tokenizer.tokenize(text))
+			TAG_RE = re.compile(r'<.*>')
+			text=TAG_RE.sub('', text)
+			text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
+			text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
+			text=enc_trans(text)
+			avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+			try:
+				avWordLen=sum([len(x) for x in words])/float(len(words))
+			except: avWordLen=0
+			nOffensive =  len(set(profanity).intersection(text.lower().split()))
+			avSyllables,threeSylPlus=sylList(words)
+			result={"_id":comment["_id"],
+					"entry_id":comment["entry_id"],
+					"parent_id": comment["parent_id"],
+					"user_id": comment["user_id"],
+					"created_at": comment["created_at"],
+					"nWords": nWords,
+					"typos": typos,
+					"caps": caps,
+					"nPunct": nPunct,
+					"nNames": nNames,
+					"nComma": nComma,
+					"nSent": nSent,
+					"avSentLen": avSentLen,
+					"avWordLen": avWordLen,
+					"nOffensive": nOffensive,
+					"avSyllables": avSyllables,
+					"threeSylPlus": threeSylPlus
+					}
+			counter=0
+			results.append(result)
+		else:
+			text=comment["message"]
+			nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+			nComma=text.count(",")
+			nSent=len(tokenizer.tokenize(text))
+			TAG_RE = re.compile(r'<.*>')
+			text=TAG_RE.sub('', text)
+			text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
+			text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
+			text=enc_trans(text)
+			avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+			try:
+				avWordLen=sum([len(x) for x in words])/float(len(words))
+			except: avWordLen=0
+			nOffensive =  len(set(profanity).intersection(text.lower().split()))
+			avSyllables,threeSylPlus=sylList(words)
+			result={"_id":comment["id"],
+					#"entry_id":comment["entry_id"],
+					#"parent_id": comment["parent_id"],
+					#"user_id": comment["user_id"],
+					"created_at": comment["created_time"],
+					"nWords": nWords,
+					"typos": typos,
+					"caps": caps,
+					"nPunct": nPunct,
+					"nNames": nNames,
+					"nComma": nComma,
+					"nSent": nSent,
+					"avSentLen": avSentLen,
+					"avWordLen": avWordLen,
+					"nOffensive": nOffensive,
+					"avSyllables": avSyllables,
+					"threeSylPlus": threeSylPlus
+					}
+			counter=0
+			results.append(result)
 	return results
 
 
