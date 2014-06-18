@@ -1,4 +1,3 @@
-script to add 
 import pymongo
 from pymongo import MongoClient
 client=MongoClient()
