@@ -10,9 +10,9 @@ comCount=0
 entCount=1
 for entry in db.metadatadb.find():
     if entCount%10==0:print 'n entries processed: '+str(entCount)
-    if comCount%1000==0:print 'n comments processed: '+ str(comCount)
     entCount+=1
     for comment in entry["comments"]:
+        if comCount%1000==0:print 'n comments processed: '+ str(comCount)
         comCount+=1
         _id=comment['_id']
         if 'shortPercentage' in db.comStats.find({'_id':_id})[0]:

@@ -134,7 +134,7 @@ def getCommentStats(out):
 			except: avWordLen=0
 			nOffensive =  len(set(profanity).intersection(text.lower().split()))
 			avSyllables,threeSylPlus=sylList(words)
-			shortPercentage=content_fraction(words)
+			#shortPercentage=content_fraction(words)
 			result={"_id":comment["_id"],
 					"entry_id":comment["entry_id"],
 					"parent_id": comment["parent_id"],
@@ -151,8 +151,8 @@ def getCommentStats(out):
 					"avWordLen": avWordLen,
 					"nOffensive": nOffensive,
 					"avSyllables": avSyllables,
-					"threeSylPlus": threeSylPlus,
-					"shortPercentage": shortPercentage
+					"threeSylPlus": threeSylPlus#,
+					#"shortPercentage": shortPercentage
 					}
 			counter=0
 			results.append(result)
