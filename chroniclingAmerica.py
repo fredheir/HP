@@ -2,6 +2,7 @@ import lxml
 from lxml import html
 import time
 import urllib3
+import sys
 
 def getUrl(url):
 	http = urllib3.PoolManager()
