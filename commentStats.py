@@ -106,7 +106,12 @@ def getBaseStats(comment):
 					caps +=1
 	return nWords,typos,caps,p1-p2,recList,nNames,pos#reclist= recognised words, and those with first cap (names)
 
-
+def content_fraction(text):
+    import nltk
+    stopwords = nltk.corpus.stopwords.words('english')
+    content = [w for w in text if w.lower() not in stopwords]
+    print content
+    return float(len(content)) / float(len(text))
 
 
 
@@ -130,6 +135,7 @@ def getCommentStats(out):
 			except: avWordLen=0
 			nOffensive =  len(set(profanity).intersection(text.lower().split()))
 			avSyllables,threeSylPlus=sylList(words)
+			shortPercentage=content_fraction(words)
 			result={"_id":comment["_id"],
 					"entry_id":comment["entry_id"],
 					"parent_id": comment["parent_id"],
@@ -146,7 +152,8 @@ def getCommentStats(out):
 					"avWordLen": avWordLen,
 					"nOffensive": nOffensive,
 					"avSyllables": avSyllables,
-					"threeSylPlus": threeSylPlus
+					"threeSylPlus": threeSylPlus,
+					"shortPercentage": shortPercentage
 					}
 			counter=0
 			results.append(result)
