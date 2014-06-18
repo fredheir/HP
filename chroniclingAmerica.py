@@ -50,7 +50,6 @@ def downloadOne(searchTerm,url):
     date=date[0]+date[1]
     print date
     body=tree.xpath("//div/p/text()")
-    print body
 
     dict={"date": date,
           "url":url,
