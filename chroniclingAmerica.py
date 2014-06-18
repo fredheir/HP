@@ -63,6 +63,7 @@ def downloadOne(searchTerm,url):
     return(dict)
 
 def executeScript(target):
+    target=int(target)
     toArchive=[]
     counter=0
     searchTerm="conspiracy"
