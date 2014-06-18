@@ -15,7 +15,7 @@ for entry in db.metadatadb.find():
     for comment in entry["comments"]:
         comCount+=1
         _id=comment['_id']
-        if 'shortPercentage' not in db.comStats.find({'_id':_id})[0]:
+        if 'shortPercentage' in db.comStats.find({'_id':_id})[0]:
             break
         else:
             nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
