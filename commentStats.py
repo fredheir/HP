@@ -205,7 +205,7 @@ def wordLookup(word):
 		#print word
 		return False
 	except:
-		print 'strange error for: '+str(word)
+		print 'strange error'
 		return False
 
 #To remove punctuation
