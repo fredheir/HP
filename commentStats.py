@@ -196,12 +196,16 @@ def getCommentStats(out):
 
 
 def wordLookup(word):
-	if usDict.check(word):
-		return True
-	if ukDict.check(word):
-		return True
-	#print word
-	return False
+	try:
+		if usDict.check(word):
+			return True
+		if ukDict.check(word):
+			return True
+		#print word
+		return False
+	except:
+		print 'strange error for: '+str(word)
+		return False
 
 #To remove punctuation
 punct=string.punctuation

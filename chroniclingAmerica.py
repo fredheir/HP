@@ -61,24 +61,40 @@ def downloadOne(searchTerm,url):
           }
     return(dict)
 
-target=218
-toArchive=[]
-counter=0
-searchTerm="conspiracy+theory"
-while True:
-        print ("getting new target links")
-        newLinks=getBaseLinks(searchTerm,target)
-        for i in newLinks:
-            counter+=1
-            cont=0
-            while cont==0:
-                try:
-                    toArchive.append(downloadOne(searchTerm,i))
-                    cont=1
-                except:
-                    time.sleep(15)
-            if counter%10==0:
-                counter=0
-                archive(db,toArchive)
-                toArchive=[]
-        target+=1
+def executeScript(target):
+    toArchive=[]
+    counter=0
+    searchTerm="conspiracy"
+    while True:
+            print ("getting new target links")
+            newLinks=getBaseLinks(searchTerm,target)
+            for i in newLinks:
+                counter+=1
+                cont=0
+                while cont==0:
+                    try:
+                        toArchive.append(downloadOne(searchTerm,i))
+                        cont=1
+                    except:
+                        time.sleep(15)
+                if counter%10==0:
+                    counter=0
+                    archive(db,toArchive)
+                    toArchive=[]
+            target+=1
+
+
+def main(argv=None):#take input file
+    print 'welcome to the cmd version of the conspiracy in america scraper. lets get cracking. Enter target page, or start at 1'
+    if argv is None:
+        argv =sys.argv
+        
+    if argv[1:]:
+        target=argv[1]
+    else:target=1
+
+    print executeScript(target)
+    
+
+if __name__ == "__main__":
+    sys.exit(main())
