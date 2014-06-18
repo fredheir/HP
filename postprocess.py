@@ -28,5 +28,4 @@ for entry in db.metadatadb.find():
                         if len(words)>0:
                             shortPercentage=content_fraction(words)
                             db.comStats.update({'_id':_id},{'$set':{'words':' '.join(words),'shortPercentage':shortPercentage}})
-                            print db.comStats.find({'_id':_id})[0]
                                  
