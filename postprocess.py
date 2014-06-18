@@ -14,18 +14,19 @@ for entry in db.metadatadb.find():
     for comment in entry["comments"]:
         if comCount%1000==0:print 'n comments processed: '+ str(comCount)
         comCount+=1
-        _id=comment['_id']
-        if 'shortPercentage' in db.comStats.find({'_id':_id})[0]:
-            break
-        else:
-            nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
-            for t in ['LOCATION','PERSON','ORGANIZATION']:
-                if t in pos:
-                    for i in pos[t]:
-                        words+=i.split()
-                        db.comStats.update({'_id':_id},{'$set':{t:pos[t]}})
-                        
-                        if len(words)>0:
-                            shortPercentage=content_fraction(words)
-                            db.comStats.update({'_id':_id},{'$set':{'words':' '.join(words),'shortPercentage':shortPercentage}})
-                                 
+        try:
+            _id=comment['_id']
+            if 'shortPercentage' in db.comStats.find({'_id':_id})[0]:
+                break
+            else:
+                nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+                for t in ['LOCATION','PERSON','ORGANIZATION']:
+                    if t in pos:
+                        for i in pos[t]:
+                            words+=i.split()
+                            db.comStats.update({'_id':_id},{'$set':{t:pos[t]}})
+                            
+                            if len(words)>0:
+                                shortPercentage=content_fraction(words)
+                                db.comStats.update({'_id':_id},{'$set':{'words':' '.join(words),'shortPercentage':shortPercentage}})
+        except:break
