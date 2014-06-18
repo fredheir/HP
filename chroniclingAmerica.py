@@ -18,7 +18,8 @@ def getBaseLinks(searchTerm,n):
             links.append(link)
     newLinks=[]
     for link in links:
-        a=link.split(";")[0]
+        a=link.split("#")[0]
+        a=a.split(";")[0]
         a="http://chroniclingamerica.loc.gov/"+a+"ocr"
         newLinks.append(a)
     return(newLinks)
