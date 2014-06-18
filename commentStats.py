@@ -110,7 +110,6 @@ def content_fraction(text):
     import nltk
     stopwords = nltk.corpus.stopwords.words('english')
     content = [w for w in text if w.lower() not in stopwords]
-    print content
     return float(len(content)) / float(len(text))
 
 
