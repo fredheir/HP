@@ -3,7 +3,7 @@ from pymongo import MongoClient
 client=MongoClient()
 db=client['hp']
 
-from commentStats.py import *
+from commentStats import *
 
 
 comCount=0
