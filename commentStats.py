@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 #Comment stats functions
+
+import sys
 import codecs
 import pymongo
 from pymongo import MongoClient
