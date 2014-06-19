@@ -68,7 +68,7 @@ def executeScript(target):
     counter=0
     searchTerm="conspiracy"
     while True:
-            print ("getting new target links":  +str(target))
+            print ("getting new target links:"  +str(target))
             newLinks=getBaseLinks(searchTerm,target)
             for i in newLinks:
                 if db.cd.find({'url':i}).limit(1).count()==0:
