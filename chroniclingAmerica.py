@@ -68,7 +68,7 @@ def executeScript(target):
     counter=0
     searchTerm="conspiracy"
     while True:
-            print ("getting new target links")
+            print ("getting new target links":  +str(target))
             newLinks=getBaseLinks(searchTerm,target)
             for i in newLinks:
                 if db.cd.find({'url':i}).limit(1).count()==0:
@@ -84,7 +84,6 @@ def executeScript(target):
                         counter=0
                         archive(db,toArchive)
                         toArchive=[]
-                else:print 'duplicated'
             target+=1
 
 
