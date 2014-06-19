@@ -22,7 +22,7 @@ for i in db.metadatadb.find({'body': {'$size': 0}}):
         bod.append(line.text_content())
     if len(bod)==0: 
         print 'body not found: '+str(i)
-    db.metadatadb.update({'url':i},{'$set':{'body':bod}})
+    db.metadatadb.update({'url':url},{'$set':{'body':bod}})
     try:
 	    tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
 	    t=[]
@@ -33,4 +33,4 @@ for i in db.metadatadb.find({'body': {'$size': 0}}):
     if len(t)==0:
         t= tree.xpath("//span[@class='group']/span/a/text()")
         print t
-        db.metadatadb.update({'url':i},{'$set' : {'tags':t}})
+        db.metadatadb.update({'url':url},{'$set' : {'tags':t}})
