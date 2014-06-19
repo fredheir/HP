@@ -71,18 +71,20 @@ def executeScript(target):
             print ("getting new target links")
             newLinks=getBaseLinks(searchTerm,target)
             for i in newLinks:
-                counter+=1
-                cont=0
-                while cont==0:
-                    try:
-                        toArchive.append(downloadOne(searchTerm,i))
-                        cont=1
-                    except:
-                        time.sleep(15)
-                if counter%10==0:
-                    counter=0
-                    archive(db,toArchive)
-                    toArchive=[]
+                if db.cd.find({'url':i}).limit(1).count()==0:
+                    counter+=1
+                    cont=0
+                    while cont==0:
+                        try:
+                            toArchive.append(downloadOne(searchTerm,i))
+                            cont=1
+                        except:
+                            time.sleep(15)
+                    if counter%10==0:
+                        counter=0
+                        archive(db,toArchive)
+                        toArchive=[]
+                    else:print 'duplicated'
             target+=1
 
 
