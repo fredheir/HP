@@ -84,6 +84,7 @@ def executeScript(target):
                         counter=0
                         archive(db,toArchive)
                         toArchive=[]
+            else:break
             target+=1
 
 
