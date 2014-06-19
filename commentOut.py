@@ -7,6 +7,9 @@ client=MongoClient()
 db=client['hp']
 import pandas
 import numpy
+from monary import Monary 
+
+mon=Monary()
 
 print 'available columns'
 
