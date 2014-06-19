@@ -84,7 +84,7 @@ def executeScript(target):
                         counter=0
                         archive(db,toArchive)
                         toArchive=[]
-                    else:print 'duplicated'
+                else:print 'duplicated'
             target+=1
 
 
