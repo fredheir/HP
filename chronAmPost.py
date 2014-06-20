@@ -25,6 +25,6 @@ for target in db.cd.find():
 	                                            "typos": typos,
 	                                            "caps": caps,
 	                                            "nPunct": nPunct,
-	                                            'namedEntities',pos,
+	                                            'namedEntities':pos,
 	                                            "nNames": nNames
 	                                            }})
