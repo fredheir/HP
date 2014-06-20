@@ -13,7 +13,9 @@ for target in db.cd.find():
 	target['text']=' '.join([i for i in target['text']])
 
 	nWords,typos,caps,nPunct,words,nNames,pos= getBaseStats(target)
-	errorRate=typos/float(nWords)
+	try:
+		errorRate=typos/float(nWords)
+	except: errorRate =None
 	print errorRate
 	cleanString=' '.join([i.lower() for i in words if len(i)>2])
 	db.cd.update({'_id':target['_id']},{'$set':{
