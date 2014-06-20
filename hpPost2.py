@@ -24,5 +24,6 @@ for target in db.metadatadb.find():
 	                                            "typos": typos,
 	                                            "caps": caps,
 	                                            "nPunct": nPunct,
+	                                            'namedEntities':pos,
 	                                            "nNames": nNames
 	                                            }})
