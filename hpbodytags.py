@@ -6,7 +6,7 @@ from lxml import html
 client=MongoClient()
 db=client['hp']
 
-for i in db.metadatadb.find({'tags': {'$size': 0}}):
+for i in db.metadatadb.find({'body': {'$size': 0}}):
     url=i['url']
     rx=getUrl(url)
     tree = html.fromstring(rx)
@@ -41,7 +41,6 @@ for i in db.metadatadb.find({'tags': {'$size': 0}}):
 	    t=stripWhiteList(t)
     except: t=tree.xpath("//div[contains(@class,'follow_tags')]/a/text()")
     if len(t)==0:
-        print 'tags not found: '+str(url)
         t= tree.xpath("//span[@class='group']/span/a/text()")
         print t
         db.metadatadb.update({'url':url},{'$set' : {'tags':t}})
