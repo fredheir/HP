@@ -71,6 +71,7 @@ def executeScript(target):
             print ("getting new target links:"  +str(target))
             newLinks=getBaseLinks(searchTerm,target)
             for i in newLinks:
+                print i
                 if db.cd.find({'url':i}).limit(1).count()==0:
                     counter+=1
                     cont=0
