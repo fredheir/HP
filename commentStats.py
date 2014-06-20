@@ -65,6 +65,7 @@ def sylList(wordList):
 	return av,outres
 
 
+
 def getBaseStats(comment):
 	tagger = ner.SocketNER(host='localhost', port=8089)
 	remove_list = ['html', 'http','https']
@@ -99,12 +100,14 @@ def getBaseStats(comment):
 	for word in out.split():
 		nWords+=1
 		if len(word)>0 and word not in ["http","https","html"]:
+			if word[0]=='"' or word[0]=="'":word=word[1:]
+			if word[-1]=='"' or word[-1]=="'":word=word[:-1]
 			#if word[0].islower():
-				if wordLookup(word)==False:
-					typos+=1
-				else:recList.append(word)
-				if word.isupper()==True:
-					caps +=1
+			if wordLookup(word)==False:
+				typos+=1
+			else:recList.append(word)
+			if word.isupper()==True:
+				caps +=1
 	return nWords,typos,caps,p1-p2,recList,nNames,pos#reclist= recognised words, and those with first cap (names)
 
 def content_fraction(text):
