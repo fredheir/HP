@@ -25,6 +25,8 @@ for i in db.metadatadb.find({'body': {'$size': 0}}):
     	body=tree.xpath("//div[contains(@class,'entry_body_text')]/p")
     if len(body) ==0:
     	body=tree.xpath("//article[@class='entry']/p")
+    if len(body) ==0:
+        body= tree.xpath("//*[@id='mainentrycontent']")
     bod=[]
     for line in body:
         bod.append(line.text_content())
