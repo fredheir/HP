@@ -91,7 +91,7 @@ def addTwenty(target,targetDate):
 			t={'text':targetText}
 			df=datetime.strptime(dateString,"%A %d %B %Y")
 			searchDate= str(df).split(' ')[0]
-			ts=int(re.sub('-','',a))
+			ts=int(re.sub('-','',searchDate))
 			
 			stats=getStats(t)
 			stats['title']=title
