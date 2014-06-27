@@ -61,7 +61,7 @@ def getTextUrl(link):
 
 
 def addTwenty(target):
-	pageN=target*20
+	pageN=int(target*20)
 	if db.aus.find({'sourcePage':pageN}).count()>0:
 		return
 	url = "http://trove.nla.gov.au/newspaper/result?q=conspiracy&s="+str(pageN)+'&sortby=dateAsc'
@@ -106,12 +106,12 @@ def addTwenty(target):
 	results=[]
 		
 def main(argv=None):#take input file
-	print 'welcome to the aussie scraper! starts on page 1 by default'
+	print 'welcome to the aussie scraper! starts on page 0 by default'
 	argv =sys.argv
 		
 	if argv[1:]:
 		target=argv[1]
-	else:target=1
+	else:target=0
 
 
 
