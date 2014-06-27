@@ -60,11 +60,11 @@ def getTextUrl(link):
 		return 'http://trove.nla.gov.au/ndp/del/text/'+str(a),a
 
 
-def addTwenty(target):
+def addTwenty(target,targetDate):
 	pageN=int(target*20)
 	if db.aus.find({'sourcePage':pageN}).count()>0:
 		return
-	url = "http://trove.nla.gov.au/newspaper/result?q=conspiracy&s="+str(pageN)+'&sortby=dateAsc'
+	url = "http://trove.nla.gov.au/newspaper/result?q=conspiracy&s="+str(pageN)+'&sortby=dateAsc&dateFrom='+targetDate
 	print url
 	dat=getUrl(url)
 	tree = html.fromstring(dat)
@@ -89,6 +89,10 @@ def addTwenty(target):
 			textUrl,_id=getTextUrl(links[n])
 			targetText=getText(textUrl)
 			t={'text':targetText}
+			df=datetime.strptime(dateString,"%A %d %B %Y")
+			searchDate= str(df).split(' ')[0]
+			ts=int(re.sub('-','',a))
+			
 			stats=getStats(t)
 			stats['title']=title
 			stats['dateString']=dateString
@@ -99,11 +103,15 @@ def addTwenty(target):
 			stats['rawText']=targetText
 			stats['_id']=_id
 			stats['sourcePage']=pageN
+			stats['ts']=ts
+			stats['searchDate']=searchDate
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			results.append(stats)
 		except:pass
 	archive(results)
 	results=[]
+	return(searchDate)
+
 		
 def main(argv=None):#take input file
 	print 'welcome to the aussie scraper! starts on page 0 by default'		
@@ -112,9 +120,16 @@ def main(argv=None):#take input file
 		target=int(argv[1])
 	else:target=1
 
+
+	targetDate=""
 	while True:
 		print 'starting page '+str(target)
-		addTwenty(target)
+		if target>50:
+			print 'resetting'
+			print searchDate
+			targetDate=searchDate
+			target=0
+		searchDate=addTwenty(target,targetDate)
 		target+=1
 	
 
