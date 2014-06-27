@@ -22,7 +22,7 @@ keep=0
 target=[u'conspir',u'plot',u'scheme',u'stratagem',u'machination',u'cabal',u'deception',u'deceit',
         u'deceive', u'ploy', u'ruse',u'dodge', u'subterfuge', u'complot',u'coup',u'colluder', u'collusion',
          u'collaborator', u'conniver', u'machinator', u'traitor',u'connive']
-for fname, url, records in readline_google_store(ngram_len=3,verbose=True):
+for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 	print fname
 	for d in records:
 	    if d[0]==previous:
