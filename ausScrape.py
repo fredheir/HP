@@ -77,6 +77,7 @@ def addTwenty(target,targetDate):
 		except:pass
 
 	results=[]
+	searchDate=""
 	for n in range(1,21):
 		try:
 			target=tree.xpath("//ol/li["+str(n)+"]/dl/dd/div")
@@ -129,7 +130,9 @@ def main(argv=None):#take input file
 			print searchDate
 			targetDate=searchDate
 			target=0
-		searchDate=addTwenty(target,targetDate)
+		temp=addTwenty(target,targetDate)
+		if len(temp)>3:
+			searchDate=temp
 		target+=1
 	
 
