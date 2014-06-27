@@ -63,7 +63,7 @@ def getTextUrl(link):
 def addTwenty(target,targetDate):
 	pageN=int(target*20)
 	if db.aus.find({'sourcePage':pageN}).count()>0:
-		return
+		return 's'
 	url = "http://trove.nla.gov.au/newspaper/result?q=conspiracy&s="+str(pageN)+'&sortby=dateAsc&dateFrom='+targetDate
 	print url
 	dat=getUrl(url)
@@ -79,6 +79,7 @@ def addTwenty(target,targetDate):
 	results=[]
 	searchDate=""
 	for n in range(1,21):
+		try:
 			target=tree.xpath("//ol/li["+str(n)+"]/dl/dd/div")
 			relScore=float(target[len(target)-1].text_content().split('score: ')[1].split(')')[0])
 			dateString=tree.xpath("//ol/li["+str(n)+"]/dl/dd/strong")[0].text_content()
@@ -107,6 +108,7 @@ def addTwenty(target,targetDate):
 			stats['searchDate']=searchDate
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			results.append(stats)
+		except:pass
 	archive(results)
 	results=[]
 	return(searchDate)
