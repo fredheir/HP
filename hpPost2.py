@@ -7,7 +7,7 @@ from hpfunctions import stripWhite
 from commentStats import *
 import commentStats
 
-for target in db.metadatadb.find():
+for target in db.metadatadb.find({'typos':{'$exists':False}}):
 	target['text'] = target.pop('body')
 	target['text']=' '.join([i for i in target['text']])
 

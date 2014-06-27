@@ -8,7 +8,7 @@ from hpfunctions import stripWhite
 from commentStats import *
 import commentStats
 
-for target in db.cd.find():
+for target in db.cd.find({'typos':{'$exists':False}}):
 	target['text'] = target.pop('text')
 	target['text']=' '.join([i for i in target['text']])
 
