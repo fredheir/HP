@@ -107,7 +107,7 @@ def addTwenty(target):
         
 def main(argv=None):#take input file
     print 'welcome to the aussie scraper! starts on page 1 by default'
-        argv =sys.argv
+    argv =sys.argv
         
     if argv[1:]:
         target=argv[1]
