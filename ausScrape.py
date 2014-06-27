@@ -110,7 +110,7 @@ def main(argv=None):#take input file
 	argv =sys.argv
 		
 	if argv[1:]:
-		target=argv[1]
+		target=str(argv[1])
 	else:target=0
 
 
