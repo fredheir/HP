@@ -1,4 +1,5 @@
 from google_ngram_downloader import readline_google_store
+fname, url, records = next(readline_google_store(ngram_len=2))
 import pymongo
 from pymongo import MongoClient
 client = MongoClient()
