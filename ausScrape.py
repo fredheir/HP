@@ -107,9 +107,13 @@ def addTwenty(target):
 		
 def main(argv=None):#take input file
 	print 'welcome to the aussie scraper! starts on page 0 by default'		
-	if argv[1:]:
-		target=str(argv[1])
-	else:target=0
+    if argv is None:
+        argv =sys.argv
+        
+    if argv[1:]:
+        target=int(argv[1])
+    else:target=1
+
 
 
 
