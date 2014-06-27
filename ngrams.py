@@ -1,9 +1,51 @@
-MIA389 Some people currently have the fear that the elections will be cancelled. How likely do you think this is? 
+from google_ngram_downloader import readline_google_store
+import pymongo
+from pymongo import MongoClient
+client = MongoClient()
+db = client['ngrams']
 
-MIA382;The government can be trusted most of the time&
-MIA383;People that have views extremely different than my own can be trusted most of the time
-MIA384;Much of the news we get from mainstream news sources is deliberately slanted to mislead us
+def getEntry(d):
+    ngram,year,match_count,volume_count=d[0:4]
+    entry={
+           'ngram':ngram,
+           'year':year,
+           'match_count':match_count,
+           'volume_count':volume_count
+           }
+    return entry
 
-MIA374; How much do you agree or disagree with the following statement: &quot;Big events like wars, the current recession, and the outcomes of elections are controlled by small groups of people who are working in secret against the rest of us.&quot; 
-MIA375; Which of these groups are likely to work in secret against the rest of us? Please check all that apply
-MIA375.2;Of the groups you mentioned in the last question, which one are you most concerned about? Please select only one.
+inspect=[]
+counter=0
+previous=""
+keep=0
+target=[u'conspir',u'plot',u'scheme',u'stratagem',u'machination',u'cabal',u'deception',u'deceit',
+        u'deceive', u'ploy', u'ruse',u'dodge', u'subterfuge', u'complot',u'coup',u'colluder', u'collusion',
+         u'collaborator', u'conniver', u'machinator', u'traitor',u'connive']
+while True:
+    d=next(records)
+    if d[0]==previous:
+        if keep !=0:
+            inspect.append(getEntry(d))
+    else:
+        if any (t in target for t in d[0].lower().split(' ')):
+            inspect.append(getEntry(d))
+            print d[0]
+            keep=1
+        else:
+            keep=0
+        previous=d[0]
+    counter+=1
+    if counter %1000000==0:
+        if counter <= 1000000000:
+            print str( counter/(1000000)) + (' (million)')    
+        else:
+            print str( counter/float(1000000000)) + (' (billion)')
+        print 'latest record: '+str(d)
+        #Archiving
+        if len (inspect)>0:
+            try: 
+                db.ngrams.insert(inspect,continue_on_error=True)
+            except pymongo.errors.DuplicateKeyError:
+                pass
+            inspect=[]
+        
