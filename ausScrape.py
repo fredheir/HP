@@ -55,7 +55,7 @@ def getText(textUrl):
 	return d
 
 def getTextUrl(link):
-			a=link.split("article/")[1]
+		a=link.split("article/")[1]
 		a=a.split("?")[0]
 		return 'http://trove.nla.gov.au/ndp/del/text/'+str(a),a
 
