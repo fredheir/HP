@@ -22,10 +22,14 @@ targetDb='tv1'
 db = client['rus']
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[ ]:
+def checField(field,target):
+    return db[targetDb].find({field,target}).count()==0:
 
 def getOneEntry(url):
     d=getUrl(url)
-    _id=url.split('/')[-1]
+    _id=int(url.split('/')[-1])
+    if not checkField('_id'):
+        return
     tree= etree.HTML(d)
     tags= tree.xpath('//meta[@name="keywords"]')[0].get('content')
     vidUrl=img=vidLen=None

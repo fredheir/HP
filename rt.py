@@ -10,9 +10,17 @@ from lxml import html,etree
 import time
 import urllib3
 import sys
-from hpfunctions import stripWhite, getUrl
+from hpfunctions import stripWhite, getUrl, archive
+from datetime import datetime
+import re
 
 
+import pymongo
+from pymongo import MongoClient
+client = MongoClient()
+targetDb='rt'
+db = client['rus']
+db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[176]:
 
 def nextDay(d):
@@ -42,34 +50,21 @@ def getDayLinks(day):
 
 # In[247]:
 
-results=[]
-day=nextDay("2006-07-01")
-while True:
-    targets=getDayLinks(day)
-    for url in targets:
-        url='http://rt.com/'+url
-        print url
-        results.append(getRtPage(url))
-    day=nextDay(day)
-    print '\n\nNEW DAY!'
-
-
 # In[ ]:
 
-results[2]
 
 
-                nextDay("2014-06-11")
-testPages=['http://rt.com/op-edge/165276-iraq-violence-usa-britain/',
-           'http://rt.com/news/169168-facebook-court-data-request/',
-           'http://rt.com/news/169156-us-denmark-turkey-rasmussen/',
-           'http://rt.com/usa/smartphone-application-community-three-762/',
-           'http://rt.com/usa/dozens-nyc-child-ring/',
-           'http://rt.com/usa/us-and-egypt-afraid-of-disruption-to-obama-visit/'
-           ]
-for url in testPages:
-    entry=getRtPage(url)
-    print entry['imageCaption']
+#                 nextDay("2014-06-11")
+# testPages=['http://rt.com/op-edge/165276-iraq-violence-usa-britain/',
+#            'http://rt.com/news/169168-facebook-court-data-request/',
+#            'http://rt.com/news/169156-us-denmark-turkey-rasmussen/',
+#            'http://rt.com/usa/smartphone-application-community-three-762/',
+#            'http://rt.com/usa/dozens-nyc-child-ring/',
+#            'http://rt.com/usa/us-and-egypt-afraid-of-disruption-to-obama-visit/'
+#            ]
+# for url in testPages:
+#     entry=getRtPage(url)
+#     print entry['imageCaption']
                 
 # In[218]:
 
@@ -135,4 +130,18 @@ def rtComs(_id):
         coms+=c['Body']['comments']
         n+=1
     return coms
+
+
+
+results=[]
+day=nextDay("2006-07-01")
+while True:
+    targets=getDayLinks(day)
+    for url in targets:
+        url='http://rt.com/'+url
+        print url
+        results.append(getRtPage(url))
+    day=nextDay(day)
+    print '\n\nNEW DAY!'
+    archive(db,targetDb,results)
 
