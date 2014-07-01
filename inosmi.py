@@ -59,15 +59,6 @@ def getPage(mn,verbose=0):
         archive(db,targetDb,results)
 
 
-# In[ ]:
-
-keep=[]
-d=200601
-while True:
-    keep+=(getPage(d,verbose=1))
-    d=getMonth(d)
-
-
 
 
 # In[541]:
@@ -205,4 +196,13 @@ def getAllComments(comments):
 
 
 
+
+
+# In[ ]:
+
+keep=[]
+d=200601
+while True:
+    keep+=(getPage(d,verbose=1))
+    d=getMonth(d)
 
