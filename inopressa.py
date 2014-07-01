@@ -15,7 +15,20 @@ from datetime import datetime
 import re
 
 
-# In[105]:
+import pymongo
+from pymongo import MongoClient
+client = MongoClient()
+targetDb='rus'
+db = client[targetDb]
+db.[targetDb].create_index([("_id", pymongo.DESCENDING)])
+
+def archive(db,metaData):
+    print ("entering scraped")
+    if len (metaData)>0:
+        try: 
+            db.cd.insert(metaData,continue_on_error=True)
+        except pymongo.errors.DuplicateKeyError:pass
+
 
 
 def getRubric(rubric):
@@ -45,21 +58,9 @@ def getTargets(rubric,page):
     return(targets)
 
 
-# In[106]:
-
-rubrics=['russia','sport','culture','incident','peace',
-         'economics','war','different','science',
-         'extremal','neareast','law','analytics']
-
-results=[]
-for i in rubrics:
-    results+=getRubric(i)
 
 
 # In[108]:
-
-print results[10]
-
 
 # In[96]:
 
@@ -90,13 +91,14 @@ def getOne(url):
     }
     return entry
 
+# In[106]:
 
-# In[80]:
+# rubrics=['russia','sport','culture','incident','peace',
+#          'economics','war','different','science',
+#          'extremal','neareast','law','analytics']
 
-t
-
-
-# In[ ]:
-
+# results=[]
+# for i in rubrics:
+#     results+=getRubric(i)
 
 
