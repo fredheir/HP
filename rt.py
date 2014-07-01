@@ -117,7 +117,7 @@ def getRtPage(url):
     'body':tree.xpath('//div[@class="cont-wp"]/p/text()'),
     'imageCaption':imageCaption
     }
-    return(entry)
+    return([entry])
 
 
 # In[149]:
@@ -145,7 +145,7 @@ while True:
     targets=getDayLinks(day)
     for url in targets:
         url='http://rt.com/'+url
-        results.append(getRtPage(url))
+        results+=(getRtPage(url))
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
     if len (results)>0:
