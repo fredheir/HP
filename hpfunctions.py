@@ -15,11 +15,11 @@ import codecs
 
 def archive(db,target,dat):
 	import pymongo
-    print ("entering scraped")
-    if len (dat)>0:
-        try: 
-            db[target].insert(dat,continue_on_error=True)
-        except pymongo.errors.DuplicateKeyError:pass
+	print ("entering scraped")
+	if len (dat)>0:
+		try: 
+			db[target].insert(dat,continue_on_error=True)
+		except pymongo.errors.DuplicateKeyError:pass
 
 
 def addOneDay(date):
@@ -125,15 +125,15 @@ def addToQueue3(url):
 		author =author.replace("By ","")
 	author=stripWhite(author)
 	try:
-	    date = tree.xpath("//meta[@name='sailthru.date']/@content")[0]
+		date = tree.xpath("//meta[@name='sailthru.date']/@content")[0]
 	except:
-	    date = tree.xpath("//span[@class='posted']/time/@datetime")[0]
+		date = tree.xpath("//span[@class='posted']/time/@datetime")[0]
 	try:
-	    tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
-	    t=[]
-	    for i in tags:
-	        t+=[i.replace(u'\xa0', u'').lstrip()]
-	    t=stripWhiteList(t)
+		tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
+		t=[]
+		for i in tags:
+			t+=[i.replace(u'\xa0', u'').lstrip()]
+		t=stripWhiteList(t)
 	except: t=tree.xpath("//div[contains(@class,'follow_tags')]/a/text()")
 	body=tree.xpath("//*[@class='entry_body_text']/p")
 	if len(body) ==0:
