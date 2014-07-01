@@ -32,6 +32,9 @@ def nextDay(d):
     return dateUp(dt).strftime("%Y-%m-%d")
 
 
+def prevDay(d):
+    dt=datetime.strptime(d, "%Y-%m-%d")
+    return dateDown(dt).strftime("%Y-%m-%d")
 
 # In[241]:
 
@@ -72,6 +75,12 @@ def getDayLinks(day):
 # In[218]:
 
 def getRtPage(url):
+
+    
+    d=getUrl(url)
+    if 'You have typed the web address incorrectly' in d:
+        return
+
     _ids=(url.split('/')[-2].split('-'))
     _id=None
     for i in _ids:
@@ -83,9 +92,6 @@ def getRtPage(url):
     if not checkField('_id',_id):
         return
 
-    d=getUrl(url)
-    if 'You have typed the web address incorrectly' in d:
-        return
     myparser = etree.HTMLParser(encoding="utf-8")
     tree= etree.HTML(d, parser=myparser)
     title= tree.xpath('//meta[@property="og:title"]')[0].get('content')
@@ -115,7 +121,8 @@ def getRtPage(url):
     'tags':tags,
     'comments':coms,
     'body':tree.xpath('//div[@class="cont-wp"]/p/text()'),
-    'imageCaption':imageCaption
+    'imageCaption':imageCaption,
+    'url':url
     }
     return([entry])
 
@@ -138,20 +145,26 @@ def rtComs(_id):
     return coms
 
 
+#db[targetDb].aggregate( [ 
+#                         { '$group': { '_id':0, 'minId': { '$max': "$_id"} } }
+#                         ] )
 
 results=[]
 day=nextDay("2006-07-01")
 while True:
-    targets=getDayLinks(day)
-    for url in targets:
-        url='http://rt.com/'+url
-        out=(getRtPage(url))
-        if out is not None:
-            results+=out
-    day=nextDay(day)
-    print '\n\nNEW DAY!: '+str(day)
-    if len (results)>0:
-        print results
-        archive(db,targetDb,results)
-        results=[]
+    day2=prevDay(day)
+    if db[targetDb].find({'searchDate':day2}).count==0:
+        targets=getDayLinks(day)
+        for url in targets:
+            url='http://rt.com/'+url
+            out=(getRtPage(url))
+            if out is not None:
+                out['searchDate']=day
+                results+=out
+        day=nextDay(day)
+        print '\n\nNEW DAY!: '+str(day)
+        if len (results)>0:
+            print results
+            archive(db,targetDb,results)
+            results=[]
 
