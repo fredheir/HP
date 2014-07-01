@@ -63,6 +63,7 @@ def getOneEntry(url):
 
 def getTargets(section,page):
     url='http://www.1tv.ru/newsarchive_l/'+section+'/page'+str(page)
+    print url
     d=getUrl(url)
     tree= etree.HTML(d)
     targets=tree.xpath('//div[@class="n_list-news"]//div[@class="img"]/a/@href')
@@ -70,7 +71,7 @@ def getTargets(section,page):
 
 def getSection(section):
     results=[]
-    n=0
+    n=1
     cont=1
     while cont==1:
         targets=getTargets(section,n)
