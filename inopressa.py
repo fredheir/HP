@@ -37,9 +37,11 @@ def getRubric(rubric):
         for i in targets:
             url='http://www.inopressa.ru/'+i
             print url
-            entry=getOne(url)
-            entry['category']=rubric
-            results.append(entry)
+            try:
+                entry=getOne(url)
+                entry['category']=rubric
+                results.append(entry)
+            except:pass
         print str(len(results))+' in results'
         archive(db,targetDb,results)
         results=[]
