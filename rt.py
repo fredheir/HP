@@ -146,7 +146,8 @@ while True:
     for url in targets:
         url='http://rt.com/'+url
         out=(getRtPage(url))
-        results+=out
+        if out is not None:
+            results+=out
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
     if len (results)>0:
