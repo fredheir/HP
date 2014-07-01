@@ -203,6 +203,6 @@ def getAllComments(comments):
 keep=[]
 d=200009
 while True:
-    keep+=(getPage(d,verbose=1))
+    getPage(d,verbose=1)
     d=getMonth(d)
 
