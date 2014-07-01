@@ -205,7 +205,7 @@ def commentSelector(d,_id,url):
 def dateUp(date):
 	return date+timedelta(days=1)
 
-def dateUp(date):
+def dateDown(date):
 	return date+timedelta(days= -1)
 
 
