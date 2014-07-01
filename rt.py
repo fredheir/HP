@@ -160,7 +160,7 @@ while True:
             url='http://rt.com/'+url
             out=(getRtPage(url))
             if out is not None:
-                out['searchDate']=day
+                out[0]['searchDate']=day
                 results+=out
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
