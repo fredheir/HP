@@ -34,7 +34,8 @@ def getRubric(rubric):
         if len(targets)<10:cont=0
         print 'page n '+str(n)
         n+=1
-        if db[targetDb].find({'url':'http://www.inopressa.ru/'+targets[0]}).count()=0:
+        t='http://www.inopressa.ru/'+targets[0]
+        if db[targetDb].find({'url':t}).count()==0:
             for i in targets:
                     url='http://www.inopressa.ru/'+i
                     print url
