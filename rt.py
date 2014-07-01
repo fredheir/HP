@@ -113,7 +113,7 @@ def getRtPage(url):
     'category':category,
     '_id':_id,
     'tags':tags,
-    'coms':coms,
+    'comments':coms,
     'body':tree.xpath('//div[@class="cont-wp"]/p/text()'),
     'imageCaption':imageCaption
     }
@@ -149,6 +149,7 @@ while True:
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
     if len (results)>0:
+        print str(len (results))+'whats up'
         archive(db,targetDb,results)
         results=[]
 
