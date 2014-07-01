@@ -14,6 +14,7 @@ from datetime import date, timedelta, datetime
 import codecs
 
 def archive(db,target,dat):
+	import pymongo
     print ("entering scraped")
     if len (dat)>0:
         try: 
