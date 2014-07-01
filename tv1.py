@@ -82,7 +82,7 @@ def getSection(section):
             entry['category']=section
             results.append(entry)
         print str(len(results))+' in results'
-        archive(db,tv1,results)
+        archive(db,targetDb,results)
 
 
 # In[ ]:
