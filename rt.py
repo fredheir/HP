@@ -13,7 +13,7 @@ import sys
 from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
-
+from tv1 import checkField
 
 import pymongo
 from pymongo import MongoClient
@@ -42,8 +42,7 @@ def getDayLinks(day):
         tree= etree.HTML(d, parser=myparser)
         links+=tree.xpath('//div[@class="content-wp"]//a[@class="header"]/@href')
         if len(links)==0:return links
-        print len(links)
-        print links
+        print str(len(links))+' targets found'
     return links
 
 
@@ -72,6 +71,17 @@ def getRtPage(url):
     d=getUrl(url)
     if 'You have typed the web address incorrectly' in d:
         return
+    _ids=(url.split('/')[-2].split('-'))
+    _id=None
+    for i in _ids:
+            try:
+                _id=int(i)
+            except:pass
+    if _id is None:
+        _id=int(d.split('var doc_id = ')[1].split(';')[0])
+    if not checkField('_id'):
+        return
+
     myparser = etree.HTMLParser(encoding="utf-8")
     tree= etree.HTML(d, parser=myparser)
     title= tree.xpath('//meta[@property="og:title"]')[0].get('content')
@@ -84,14 +94,6 @@ def getRtPage(url):
         author=authorImage=None
     date=stripWhite(tree.xpath('//span[@class="time"]')[0].text.split('Published time: ')[1])
     category=tree.xpath('//li[@class="active"]/a')[0].text
-    _ids=(url.split('/')[-2].split('-'))
-    _id=None
-    for i in _ids:
-            try:
-                _id=int(i)
-            except:pass
-    if _id is None:
-        _id=int(d.split('var doc_id = ')[1].split(';')[0])
     tags=tree.xpath('//div[@class="b-tags_trends"]/div/a/text()')
     coms=rtComs(_id)
     imageCaption=None
@@ -139,9 +141,9 @@ while True:
     targets=getDayLinks(day)
     for url in targets:
         url='http://rt.com/'+url
-        print url
         results.append(getRtPage(url))
     day=nextDay(day)
-    print '\n\nNEW DAY!'
+    print '\n\nNEW DAY!: '+str(day)
     archive(db,targetDb,results)
+    results=[]
 
