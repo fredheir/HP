@@ -13,6 +13,12 @@ import lxml
 from datetime import date, timedelta, datetime
 import codecs
 
+def archive(db,target,dat):
+    print ("entering scraped")
+    if len (dat)>0:
+        try: 
+            db[target].insert(dat,continue_on_error=True)
+        except pymongo.errors.DuplicateKeyError:pass
 
 
 def addOneDay(date):

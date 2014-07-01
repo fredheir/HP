@@ -10,7 +10,7 @@ from lxml import html,etree
 import time
 import urllib3
 import sys
-from hpfunctions import stripWhite, getUrl
+from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
 
@@ -22,24 +22,18 @@ targetDb='rus'
 db = client[targetDb]
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 
-def archive(db,metaData):
-    print ("entering scraped")
-    if len (metaData)>0:
-        try: 
-            db.cd.insert(metaData,continue_on_error=True)
-        except pymongo.errors.DuplicateKeyError:pass
 
 
 
 def getRubric(rubric):
     results=[]
-    n=810
+    n=0
     cont=1
     while cont==1:
         targets=getTargets(rubric,n)
         if len(targets)<10:cont=0
         print 'page n '+str(n)
-        n+=100
+        n+=1
         for i in targets:
             url='http://www.inopressa.ru/'+i
             print url
@@ -47,7 +41,7 @@ def getRubric(rubric):
             entry['category']=rubric
             results.append(entry)
         print str(len(results))+' in results'
-    return results
+    archive(db,targetDb,results)
     
 def getTargets(rubric,page):
     url='http://www.inopressa.ru/rubrics/'+rubric+'?page='+str(page)
@@ -93,12 +87,13 @@ def getOne(url):
 
 # In[106]:
 
-# rubrics=['russia','sport','culture','incident','peace',
-#          'economics','war','different','science',
-#          'extremal','neareast','law','analytics']
+rubrics=['russia','sport','culture','incident','peace',
+         'economics','war','different','science',
+         'extremal','neareast','law','analytics']
 
-# results=[]
-# for i in rubrics:
-#     results+=getRubric(i)
+
+for i in rubrics:
+    print i
+    getRubric(i)
 
 
