@@ -148,6 +148,7 @@ while True:
         results.append(getRtPage(url))
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
-    archive(db,targetDb,results)
-    results=[]
+    if len (results)>0:
+        archive(db,targetDb,results)
+        results=[]
 
