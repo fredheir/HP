@@ -41,7 +41,8 @@ def getRubric(rubric):
             entry['category']=rubric
             results.append(entry)
         print str(len(results))+' in results'
-    archive(db,targetDb,results)
+        archive(db,targetDb,results)
+        results=[]
     
 def getTargets(rubric,page):
     url='http://www.inopressa.ru/rubrics/'+rubric+'?page='+str(page)
