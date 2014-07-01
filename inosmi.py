@@ -48,15 +48,15 @@ def getPage(mn,verbose=0):
         if len(targets)==0:
             cont=0
             print 'all done here! moving on'
-        else:
+        if len(targets)>0 and db[targetDb].find({'url':url}).count()==0:
             print 'New targets found!: '+str(len(targets))+' links to go '+url
             pn+=1
-        for target in targets:
-            if not '/overview/' in target:
-                new=getEntry('http://inosmi.ru'+target,verbose)
-                #print new['title']
-                results.append(new)
-        archive(db,targetDb,results)
+            for target in targets:
+                if not '/overview/' in target:
+                    new=getEntry('http://inosmi.ru'+target,verbose)
+                    #print new['title']
+                    results.append(new)
+            archive(db,targetDb,results)
 
 
 
@@ -201,7 +201,7 @@ def getAllComments(comments):
 # In[ ]:
 
 keep=[]
-d=200601
+d=200009
 while True:
     keep+=(getPage(d,verbose=1))
     d=getMonth(d)
