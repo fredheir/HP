@@ -13,6 +13,7 @@ import sys
 from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
+from mongoUtils import checkField
 
 
 import pymongo
@@ -22,8 +23,7 @@ targetDb='tv1'
 db = client['rus']
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[ ]:
-def checkField(field,target):
-    return db[targetDb].find({field:target}).count()==0
+
 
 def getOneEntry(url):
     d=getUrl(url)
