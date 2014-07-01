@@ -13,7 +13,8 @@ import sys
 from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
-from mongoUtils import checkField
+
+
 
 import pymongo
 from pymongo import MongoClient
@@ -22,6 +23,9 @@ targetDb='rt'
 db = client['rus']
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[176]:
+
+def checkField(field,target):
+    return db[targetDb].find({field:target}).count()==0
 
 def nextDay(d):
     dt=datetime.strptime(d, "%Y-%m-%d")
