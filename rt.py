@@ -13,7 +13,7 @@ import sys
 from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
-from tv1 import checkField
+from mongoUtils import checkField
 
 import pymongo
 from pymongo import MongoClient
