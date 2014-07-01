@@ -56,7 +56,7 @@ def getOneEntry(url):
     'text':text,
     'author':author,
     '_id':_id,
-    ]'time':time
+    'time':time
     }
     return entry
 
