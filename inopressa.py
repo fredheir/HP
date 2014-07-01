@@ -34,14 +34,16 @@ def getRubric(rubric):
         if len(targets)<10:cont=0
         print 'page n '+str(n)
         n+=1
-        for i in targets:
-            url='http://www.inopressa.ru/'+i
-            print url
-            try:
-                entry=getOne(url)
-                entry['category']=rubric
-                results.append(entry)
-            except:pass
+        if db[targetDb].find({'url':'http://www.inopressa.ru/'+targets[0]}).count()=0:
+            for i in targets:
+                    url='http://www.inopressa.ru/'+i
+                    print url
+                    try:
+                        entry=getOne(url)
+                        entry['category']=rubric
+                        results.append(entry)
+                    except:pass
+        else:print 'already seen'
         print str(len(results))+' in results'
         archive(db,targetDb,results)
         results=[]
