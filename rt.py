@@ -72,7 +72,6 @@ def getDayLinks(day):
 # In[218]:
 
 def getRtPage(url):
-    d=getUrl(url)
     if 'You have typed the web address incorrectly' in d:
         return
     _ids=(url.split('/')[-2].split('-'))
@@ -86,6 +85,7 @@ def getRtPage(url):
     if not checkField('_id',_id):
         return
 
+    d=getUrl(url)
     myparser = etree.HTMLParser(encoding="utf-8")
     tree= etree.HTML(d, parser=myparser)
     title= tree.xpath('//meta[@property="og:title"]')[0].get('content')
