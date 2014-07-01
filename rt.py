@@ -162,6 +162,7 @@ while True:
             if out is not None:
                 out[0]['searchDate']=day
                 results+=out
+    else: print 'skipping day'
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
     if len (results)>0:
