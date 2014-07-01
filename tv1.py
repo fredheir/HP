@@ -66,7 +66,7 @@ def getTargets(section,page):
     print url
     d=getUrl(url)
     tree= etree.HTML(d)
-    targets=tree.xpath('//div[@class="n_list-news"]//div[@class="img"]/a/@href')
+    targets=tree.xpath('//div[@class="n_list-news"]//div[contains(@class,"img")]/a/@href')
     print str(len(targets)) +'files to scrape from this section'
     return(targets)
 
