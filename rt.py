@@ -79,7 +79,7 @@ def getRtPage(url):
             except:pass
     if _id is None:
         _id=int(d.split('var doc_id = ')[1].split(';')[0])
-    if not checkField('_id'):
+    if not checkField('_id',_id):
         return
 
     myparser = etree.HTMLParser(encoding="utf-8")

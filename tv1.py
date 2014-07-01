@@ -28,7 +28,7 @@ def checkField(field,target):
 def getOneEntry(url):
     d=getUrl(url)
     _id=int(url.split('/')[-1])
-    if not checkField('_id'):
+    if not checkField('_id',_id):
         return
     tree= etree.HTML(d)
     tags= tree.xpath('//meta[@name="keywords"]')[0].get('content')
