@@ -74,7 +74,7 @@ def getOne(url):
     date=datetime.strptime(date, "%d%b%Y")
     text=tree.xpath('//div[@class="body"]/p/text()')
     text = ''.join([i for i in text])
-    text=re.sub('\r','\n',text2)
+    text=re.sub('\r','\n',text)
     entry={
     'title':title,
     'author':author,
