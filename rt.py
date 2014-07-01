@@ -3,7 +3,7 @@
 
 # In[18]:
 
-from hpfunctions import dateUp
+from hpfunctions import dateUp, dateDown
 from datetime import datetime
 import lxml
 from lxml import html,etree
@@ -76,7 +76,7 @@ def getDayLinks(day):
 
 def getRtPage(url):
 
-    
+
     d=getUrl(url)
     if 'You have typed the web address incorrectly' in d:
         return
