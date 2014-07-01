@@ -139,7 +139,7 @@ def getEntry(url,verbose=0):
     '_id':int(url.split('/')[len(url.split('/'))-1].split('.')[0]),
     'category':url.split('/')[3],
     'translator':translator,
-    'source',inosmi
+    'source':inosmi
     }
     return(entry)
 
