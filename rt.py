@@ -165,7 +165,6 @@ while True:
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)
     if len (results)>0:
-        print results
         archive(db,targetDb,results)
         results=[]
 
