@@ -20,7 +20,7 @@ from pymongo import MongoClient
 client = MongoClient()
 targetDb='rus'
 db = client[targetDb]
-db.[targetDb].create_index([("_id", pymongo.DESCENDING)])
+db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 
 def archive(db,metaData):
     print ("entering scraped")
