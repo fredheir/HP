@@ -80,7 +80,7 @@ def getSection(section):
         n+=1
         for i in targets:
             url='http://www.1tv.ru/'+i
-            if db[targetDb].find({'url':urk}).count()==0:
+            if db[targetDb].find({'url':url}).count()==0:
                 print url
                 entry=getOneEntry(url)
                 entry['category']=section
