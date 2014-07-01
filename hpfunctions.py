@@ -205,6 +205,8 @@ def commentSelector(d,_id,url):
 def dateUp(date):
 	return date+timedelta(days=1)
 
+def dateUp(date):
+	return date+timedelta(days= -1)
 
 
 def file_contents(file_name):
