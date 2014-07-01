@@ -8,15 +8,16 @@ from lxml import html, etree
 import time
 import urllib3
 import sys
-from hpfunctions import stripWhite, getUrl
+from hpfunctions import stripWhite, getUrl,archive
+
+import pymongo
+from pymongo import MongoClient
+client = MongoClient()
+targetDb='inosmi'
+db = client['rus']
+db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 
 
-# In[386]:
-
-getMonth(201112)
-
-
-# In[481]:
 
 def getMonth(t):
     t=str(t)
@@ -55,7 +56,7 @@ def getPage(mn,verbose=0):
                 new=getEntry('http://inosmi.ru'+target,verbose)
                 #print new['title']
                 results.append(new)
-    return results
+        archive(db,targetDb,results)
 
 
 # In[ ]:
@@ -67,21 +68,6 @@ while True:
     d=getMonth(d)
 
 
-# In[534]:
-
-for i in keep:print i['translator']
-
-
-# In[321]:
-
-url='http://inosmi.ru/world/20140628/221314285.html'
-d=getEntry(url)
-
-
-# In[322]:
-
-print len(d)
-print len(d['comments'])
 
 
 # In[541]:
@@ -152,19 +138,10 @@ def getEntry(url,verbose=0):
     'url':url,
     '_id':int(url.split('/')[len(url.split('/'))-1].split('.')[0]),
     'category':url.split('/')[3],
-    'translator':translator
+    'translator':translator,
+    'source',inosmi
     }
     return(entry)
-
-
-# In[526]:
-
-u'Перевод: Рафаэль Сайдашев.'.split(u'Перевод: ')[1]
-
-
-# In[319]:
-
-len(comments)
 
 
 # In[318]:
@@ -200,10 +177,6 @@ def getSubComment(commentChild,parent):
     return out
 
 
-# In[291]:
-
-d=(getSubComments('http://inosmi.ru'+comments[0].find('div[@class="foot"]/span/a').get('rel')))
-
 
 # In[316]:
 
@@ -230,17 +203,6 @@ def getAllComments(comments):
     return results
 
 
-# In[312]:
-
-for i in results:print i['comDate']
-
-
-# In[271]:
-
-ires
-
-
-# In[ ]:
 
 
 

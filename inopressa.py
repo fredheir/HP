@@ -18,8 +18,8 @@ import re
 import pymongo
 from pymongo import MongoClient
 client = MongoClient()
-targetDb='rus'
-db = client[targetDb]
+targetDb='inopressa'
+db = client['rus']
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 
 
@@ -65,7 +65,7 @@ def getOne(url):
     tree= etree.HTML(d)
     title= tree.xpath('//meta[@property="og:title"]')[0].get('content')
 
-    author,source=tree.xpath('//h3/a/text()')[0].split(' | ')
+    author,publication=tree.xpath('//h3/a/text()')[0].split(' | ')
     if not u'обзор' in author:
         origUrl=tree.xpath('//div[@class="source"]/a/@href')
     else:
@@ -82,7 +82,9 @@ def getOne(url):
     'origUrl':origUrl,
     'date':date,
     'url':url,
-    'text':text
+    'text':text,
+    'publication':publication,
+    'source':'inoPressa'
     }
     return entry
 
@@ -93,6 +95,8 @@ rubrics=['russia','sport','culture','incident','peace',
          'extremal','neareast','law','analytics']
 
 
+
+#For subsequent iterations write in start point by database query for each url found: go until first target in db. 
 for i in rubrics:
     print i
     getRubric(i)
