@@ -23,7 +23,7 @@ db = client['rus']
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[ ]:
 def checkField(field,target):
-    return db[targetDb].find({field,target}).count()==0
+    return db[targetDb].find({field:target}).count()==0
 
 def getOneEntry(url):
     d=getUrl(url)
