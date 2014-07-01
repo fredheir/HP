@@ -79,10 +79,12 @@ def getSection(section):
         n+=1
         for i in targets:
             url='http://www.1tv.ru/'+i
-            print url
-            entry=getOneEntry(url)
-            entry['category']=section
-            results.append(entry)
+            if db[targetDb].find({'url':urk}).count()==0:
+                print url
+                entry=getOneEntry(url)
+                entry['category']=section
+                results.append(entry)
+            else: print 'passing'
         print str(len(results))+' in results'
         archive(db,targetDb,results)
 
