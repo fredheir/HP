@@ -53,9 +53,11 @@ def getPage(mn,verbose=0):
             pn+=1
             for target in targets:
                 if not '/overview/' in target:
-                    new=getEntry('http://inosmi.ru'+target,verbose)
-                    #print new['title']
-                    results.append(new)
+                    try:
+                        new=getEntry('http://inosmi.ru'+target,verbose)
+                        #print new['title']
+                        results.append(new)
+                    except:pass
             archive(db,targetDb,results)
 
 

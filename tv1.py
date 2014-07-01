@@ -10,15 +10,23 @@ from lxml import html,etree
 import time
 import urllib3
 import sys
-from hpfunctions import stripWhite, getUrl
+from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
 
 
+import pymongo
+from pymongo import MongoClient
+client = MongoClient()
+targetDb='tv1'
+db = client['rus']
+db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[ ]:
 
 def getOneEntry(url):
     d=getUrl(url)
+    _id=url.split('/')[-1]
+    print _id
     tree= etree.HTML(d)
     tags= tree.xpath('//meta[@name="keywords"]')[0].get('content')
     vidUrl=img=vidLen=None
@@ -45,19 +53,11 @@ def getOneEntry(url):
     'date':date,
     'url':url,
     'text':text,
-    'author':author
+    'author':author,
+    '_id':_id
     }
     return entry
 
-#ADD _ID
-
-
-# In[ ]:
-
-#entry=getOneEntry('http://www.1tv.ru/news/social/261968')
-#odnako=Leont'ev
-section=['polit','election','economic','social','world','crime',
-         'techno','health','culture','sport','other','odnako','zaprotiv','weather']
 
 def getTargets(section,page):
     url='http://www.1tv.ru/newsarchive_l/'+section+'/page'+str(page)
@@ -76,13 +76,13 @@ def getSection(section):
         print 'page n '+str(n)
         n+=1
         for i in targets:
-            url='http://www.1tv.ru//'+i
+            url='http://www.1tv.ru/'+i
             print url
             entry=getOneEntry(url)
             entry['category']=section
             results.append(entry)
         print str(len(results))+' in results'
-    return results
+        archive(db,tv1,results)
 
 
 # In[ ]:
@@ -90,9 +90,8 @@ def getSection(section):
 section=['polit','election','economic','social','world','crime',
          'techno','health','culture','sport','other','odnako','zaprotiv','weather']
 
-results=[]
 for i in section:
-    results+=getSection(i)
+    getSection(i)
 
 
 # In[ ]:
