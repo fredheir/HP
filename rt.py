@@ -162,10 +162,10 @@ while True:
             if out is not None:
                 out['searchDate']=day
                 results+=out
-        day=nextDay(day)
-        print '\n\nNEW DAY!: '+str(day)
-        if len (results)>0:
-            print results
-            archive(db,targetDb,results)
-            results=[]
+    day=nextDay(day)
+    print '\n\nNEW DAY!: '+str(day)
+    if len (results)>0:
+        print results
+        archive(db,targetDb,results)
+        results=[]
 
