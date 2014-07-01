@@ -26,7 +26,6 @@ db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 def getOneEntry(url):
     d=getUrl(url)
     _id=url.split('/')[-1]
-    print _id
     tree= etree.HTML(d)
     tags= tree.xpath('//meta[@name="keywords"]')[0].get('content')
     vidUrl=img=vidLen=None
@@ -44,6 +43,8 @@ def getOneEntry(url):
         author=tree.xpath('//div[@class="txt"]/a/text()')[0]
     except:pass
     date=stripWhite(tree.xpath('//h4/span/text()')[0])
+    time=stripWhite(tree.xpath('//h4/span/strong/text()')[0])
+    print time
     entry={
     'title':title,
     'tags':tags,
@@ -54,7 +55,8 @@ def getOneEntry(url):
     'url':url,
     'text':text,
     'author':author,
-    '_id':_id
+    '_id':_id,
+    ]'time':time
     }
     return entry
 
