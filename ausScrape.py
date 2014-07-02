@@ -127,7 +127,7 @@ def main(argv=None):#take input file
 		targetDate=(argv[1])
 	else:targetDate='1800-01-01'
 
-
+	started=False
 	target=0
 	while True:
 		print 'starting page '+str(target)
@@ -138,7 +138,11 @@ def main(argv=None):#take input file
 			target=0
 		temp=addTwenty(target,targetDate)
 		if len(temp)>3:
+			started=True
 			searchDate=temp
+		elif temp=='s':
+			if started==True:
+				False
 		target+=1
 	
 
