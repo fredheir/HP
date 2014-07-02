@@ -113,7 +113,7 @@ def addTwenty(target,targetDate):
 			stats['searchYear']=int(searchDate.split('-')[0])
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			#results.append(stats)
-			db.aus.insert(stats)
+			db.aus2.insert(stats)
 		except:pass
 	#archive(results)
 	#results=[]
