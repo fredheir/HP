@@ -27,7 +27,7 @@ words_re = re.compile(r"|\b".join(target))
 started=False
 for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 	print fname
-	if 'ac.gz' in str(fname):
+	if 'ad.gz' in str(fname):
 		started=True
 	while started==True:
 		for d in records:
