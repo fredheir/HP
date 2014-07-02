@@ -7,7 +7,7 @@ from hpfunctions import dateUp
 from datetime import datetime
 import lxml
 from lxml import html,etree
-import time
+from time import sleep
 import urllib3
 import sys
 from hpfunctions import stripWhite, getUrl, archive
@@ -32,7 +32,7 @@ db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 def checkField(field,target):
     return db[targetDb].find({field:target}).count()==0
 
-@timeout(90, os.strerror(errno.ETIMEDOUT))
+@timeout(10, os.strerror(errno.ETIMEDOUT))
 def getOneEntry(url):
     d=getUrl(url)
     _id=int(url.split('/')[-1])
@@ -106,7 +106,7 @@ def getSection(section):
                         entry=getOneEntry(url)
                     except:
                         print 'sleeping for thirty. N retries: '+str(retry)
-                        time.time.sleep(30)
+                        sleep(30)
                         retry+=1
                         pass
                 entry['category']=section
