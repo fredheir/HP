@@ -13,7 +13,6 @@ import sys
 from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
-from mongoUtils import checkField
 
 
 import pymongo
@@ -24,6 +23,9 @@ db = client['rus']
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 # In[ ]:
 
+
+def checkField(field,target):
+    return db[targetDb].find({field:target}).count()==0
 
 def getOneEntry(url):
     d=getUrl(url)
@@ -76,7 +78,11 @@ def getTargets(section,page):
 
 def getSection(section):
     results=[]
-    n=1
+    n=db[targetDb].aggregate( [ 
+                         {'$match':{'category':cat}},
+                         { '$group': { '_id':0, 'minId': { '$min': "$searchpage"} } }
+                         ] )
+    n=533
     cont=1
     while cont==1:
         targets=getTargets(section,n)
@@ -89,6 +95,7 @@ def getSection(section):
                 print url
                 entry=getOneEntry(url)
                 entry['category']=section
+                entry['searchpage']=n
                 results.append(entry)
             else: print 'passing'
         print str(len(results))+' in results'
