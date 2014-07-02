@@ -13,7 +13,7 @@ import sys
 from hpfunctions import stripWhite, getUrl, archive
 from datetime import datetime
 import re
-
+import os
 from timeout import timeout
 
 import pymongo
