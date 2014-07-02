@@ -31,7 +31,8 @@ def getStats(target):
 
 client = MongoClient()
 db = client['aus']
-db.aus.create_index([("_id", pymongo.DESCENDING)])
+targetDb='aus'
+db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 
 
 def archive(metaData):
@@ -62,9 +63,6 @@ def getTextUrl(link):
 
 def addTwenty(target,targetDate):
 	pageN=int(target*20)
-	if db.aus.find({'sourcePage':pageN,'searchDate':targetDate}).count()>0:
-		print 'DUPLICATES!'
-		return 's'
 	url = "http://trove.nla.gov.au/newspaper/result?q=conspiracy&s="+str(pageN)+'&sortby=dateAsc&dateFrom='+targetDate
 	print url
 	dat=getUrl(url)
@@ -76,11 +74,17 @@ def addTwenty(target,targetDate):
 			if "ndp/del/" in str(link): 
 				links.append(link)
 		except:pass
+	textUrl,_id=getTextUrl(links[0])
+	_id=int(_id)
+
+	if db.aus.find({'_id':_id).count()>0:
+		print 'DUPLICATES!'
+		return 's'
 
 	#results=[]
 	searchDate=""
 	for n in range(1,21):
-		#try:
+		try:
 			target=tree.xpath("//ol/li["+str(n)+"]/dl/dd/div")
 			relScore=float(target[len(target)-1].text_content().split('score: ')[1].split(')')[0])
 			dateString=tree.xpath("//ol/li["+str(n)+"]/dl/dd/strong")[0].text_content()
@@ -109,8 +113,8 @@ def addTwenty(target,targetDate):
 			stats['searchDate']=searchDate
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			#results.append(stats)
-			db.aus.update({'_id':stats['_id']},{'$set':stats})
-		#except:pass
+			db.aus.update({'_id':stats['_id']},{'$set':{stats}})
+		except:pass
 	#archive(results)
 	#results=[]
 	return(searchDate)
@@ -124,7 +128,7 @@ def main(argv=None):#take input file
 	else:targetDate='1800-01-01'
 
 
-	target=1
+	target=0
 	while True:
 		print 'starting page '+str(target)
 		if target>50:
