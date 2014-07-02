@@ -24,7 +24,11 @@ target=[u'conspir',u'scheme',u'stratagem',u'machination',u'cabal',u'deception',u
         u'deceive', u'ploy', u'ruse',u'dodge', u'subterfuge', u'complot',u'colluder', u'collusion',
          u'collaborator', u'conniver', u'machinator', u'traitor',u'connive']
 words_re = re.compile(r"|\b".join(target))
+started=False
 for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
+	if 'ac.gz' in str(fname):
+		started=True
+	while started==True
 	print fname
 	for d in records:
 	    if d[0]==previous:
