@@ -125,7 +125,19 @@ def main(argv=None):#take input file
 	if argv is None: argv =sys.argv
 	if argv[1:]:
 		targetDate=(argv[1])
-	else:targetDate='1800-01-01'
+	else:
+
+	    n=db[targetDb].aggregate( [ 
+	                         { '$group': { '_id':0, 'max': { '$max': "$searchYear"} } }
+	                         ] )['result']
+	    if len(n) == 0:
+	        n=1800
+	    else:
+	        print n
+	        n=[0]['max']
+	    targetDate=str(n)+'-01-01'
+
+
 
 	started=False
 	target=0
