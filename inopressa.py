@@ -31,6 +31,7 @@ def getRubric(rubric):
     cont=1
     while cont==1:
         targets=getTargets(rubric,n)
+        print targets[0]
         if len(targets)<10:cont=0
         print 'page n '+str(n)
         n+=1
@@ -95,7 +96,7 @@ def getOne(url):
 
 # In[106]:
 
-rubrics=['russia','sport','culture','incident','peace',
+rubrics=[#'russia','sport','culture','incident','peace',
          'economics','war','different','science',
          'extremal','neareast','law','analytics']
 
