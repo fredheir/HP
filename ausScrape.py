@@ -31,7 +31,7 @@ def getStats(target):
 
 client = MongoClient()
 db = client['aus']
-targetDb='aus'
+targetDb='aus2'
 db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 
 
@@ -39,7 +39,7 @@ def archive(metaData):
 	print ("entering scraped")
 	if len (metaData)>0:
 		try: 
-			db.aus.insert(metaData,continue_on_error=True)
+			db.aus2.insert(metaData,continue_on_error=True)
 		except pymongo.errors.DuplicateKeyError:pass
 
 
