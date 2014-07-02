@@ -90,6 +90,7 @@ def getSection(section):
     if n is None:
         n=0
     else:
+        print n
         n=n['result'][0]['max']
     cont=1
     while cont==1:
