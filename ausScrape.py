@@ -121,7 +121,7 @@ def main(argv=None):#take input file
 	if argv is None: argv =sys.argv
 	if argv[1:]:
 		targetDate=(argv[1])
-	else:targetDate=1
+	else:targetDate='1800-01-01'
 
 
 	target=1
