@@ -63,6 +63,7 @@ def getTextUrl(link):
 def addTwenty(target,targetDate):
 	pageN=int(target*20)
 	if db.aus.find({'sourcePage':pageN,'searchDate':targetDate}).count()>0:
+		print 'DUPLICATES!'
 		return 's'
 	url = "http://trove.nla.gov.au/newspaper/result?q=conspiracy&s="+str(pageN)+'&sortby=dateAsc&dateFrom='+targetDate
 	print url
