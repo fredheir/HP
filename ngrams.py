@@ -4,6 +4,7 @@ import pymongo
 from pymongo import MongoClient
 client = MongoClient()
 db = client['ngrams']
+import re
 
 def getEntry(d):
     ngram,year,match_count,volume_count=d[0:4]
@@ -19,9 +20,10 @@ inspect=[]
 counter=0
 previous=""
 keep=0
-target=[u'conspir',u'plot',u'scheme',u'stratagem',u'machination',u'cabal',u'deception',u'deceit',
-        u'deceive', u'ploy', u'ruse',u'dodge', u'subterfuge', u'complot',u'coup',u'colluder', u'collusion',
+target=[u'conspir',u'scheme',u'stratagem',u'machination',u'cabal',u'deception',u'deceit',
+        u'deceive', u'ploy', u'ruse',u'dodge', u'subterfuge', u'complot',u'colluder', u'collusion',
          u'collaborator', u'conniver', u'machinator', u'traitor',u'connive']
+words_re = re.compile(r"|\b".join(target))
 for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 	print fname
 	for d in records:
@@ -29,7 +31,7 @@ for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 	        if keep !=0:
 	            inspect.append(getEntry(d))
 	    else:
-	        if any (t in target for t in d[0].lower().split(' ')):
+	        if words_re.search(d[0]):
 	            inspect.append(getEntry(d))
 	            print d[0]
 	            keep=1
@@ -46,7 +48,7 @@ for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 	        #Archiving
 	        if len (inspect)>0:
 	            try: 
-	                db.ngrams.insert(inspect,continue_on_error=True)
+	                db.ngrams2.insert(inspect,continue_on_error=True)
 	            except pymongo.errors.DuplicateKeyError:
 	                pass
 	            inspect=[]
