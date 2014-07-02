@@ -100,7 +100,15 @@ def getSection(section):
             url='http://www.1tv.ru/'+i
             if db[targetDb].find({'url':url}).count()==0:
                 print url
-                entry=getOneEntry(url)
+                retry=0
+                while retry<5:
+                    try:
+                        entry=getOneEntry(url)
+                    except:
+                        print 'sleeping for thirty. N retries: '+str(retry)
+                        time.time.sleep(30)
+                        retry+=1
+                        pass
                 entry['category']=section
                 entry['searchpage']=n
                 results.append(entry)
