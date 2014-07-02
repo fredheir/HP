@@ -86,12 +86,12 @@ def getSection(section):
     n=db[targetDb].aggregate( [ 
                          {'$match':{'category':section}},
                          { '$group': { '_id':0, 'max': { '$max': "$searchpage"} } }
-                         ] )
-    if n is None:
+                         ] )['result']
+    if len(n) == 0:
         n=0
     else:
         print n
-        n=n['result'][0]['max']
+        n=[0]['max']
     cont=1
     while cont==1:
         targets=getTargets(section,n)
