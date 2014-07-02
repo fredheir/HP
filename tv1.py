@@ -56,7 +56,6 @@ def getOneEntry(url):
     except:pass
     date=stripWhite(tree.xpath('//h4/span/text()')[0])
     time=stripWhite(tree.xpath('//h4/span/strong/text()')[0])
-    print time
     entry={
     'title':title,
     'tags':tags,
@@ -119,8 +118,8 @@ def getSection(section):
 
 # In[ ]:
 
-section=['polit','election','economic','social','world','crime',
-         'techno','health','culture','sport','other','odnako','zaprotiv','weather']
+section=['election','economic','social','world','crime',
+         'techno','health','culture','sport','other','odnako','zaprotiv','weather','polit']
 
 for i in section:
     getSection(i)
