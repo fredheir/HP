@@ -110,7 +110,7 @@ def addTwenty(target,targetDate):
 			stats['_id']=int(_id)
 			stats['sourcePage']=pageN
 			stats['ts']=ts
-			stats['searchDate']=searchDate
+			stats['searchYear']=int(searchDate.split('-')[0])
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			#results.append(stats)
 			db.aus.insert(stats)
