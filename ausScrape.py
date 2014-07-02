@@ -130,6 +130,7 @@ def main(argv=None):#take input file
 	    n=db[targetDb].aggregate( [ 
 	                         { '$group': { '_id':0, 'max': { '$max': "$searchYear"} } }
 	                         ] )['result']
+	    print n
 	    if len(n) == 0:
 	        n=1800
 	    else:
