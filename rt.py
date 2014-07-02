@@ -154,7 +154,7 @@ day=nextDay("2006-07-01")
 while True:
     day2=prevDay(day)
     print day2
-    if db[targetDb].find({'searchDate':day2}).count()==0:
+    if db[targetDb].find({'searchDate':day2}).count()==0 or db[targetDb].find({'searchDate':nextDay(day)}).count()==0:
         targets=getDayLinks(day)
         for url in targets:
             try:
