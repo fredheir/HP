@@ -97,7 +97,7 @@ def getOne(url):
 # In[106]:
 
 rubrics=[#'russia','sport','culture','incident','peace',
-         'economics','war','different','science',
+         #'economics','war','different','science',
          'extremal','neareast','law','analytics']
 
 
