@@ -77,7 +77,7 @@ def addTwenty(target,targetDate):
 	textUrl,_id=getTextUrl(links[0])
 	_id=int(_id)
 
-	if db.aus.find({'_id':_id).count()>0:
+	if db.aus.find({'_id':_id}).count()>0:
 		print 'DUPLICATES!'
 		return 's'
 
