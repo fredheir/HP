@@ -79,7 +79,7 @@ def getTargets(section,page):
 def getSection(section):
     results=[]
     n=db[targetDb].aggregate( [ 
-                         {'$match':{'category':cat}},
+                         {'$match':{'category':section}},
                          { '$group': { '_id':0, 'minId': { '$min': "$searchpage"} } }
                          ] )
     n=533
