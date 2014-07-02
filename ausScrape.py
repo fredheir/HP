@@ -103,13 +103,13 @@ def addTwenty(target,targetDate):
 			stats['source']=source
 			stats['textUrl']=textUrl
 			stats['rawText']=targetText
-			stats['_id']=_id
+			stats['_id']=int(_id)
 			stats['sourcePage']=pageN
 			stats['ts']=ts
 			stats['searchDate']=searchDate
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			#results.append(stats)
-			db.aus.insert(stats)
+			db.aus.update(stats)
 		#except:pass
 	#archive(results)
 	#results=[]
@@ -120,11 +120,11 @@ def main(argv=None):#take input file
 	print 'welcome to the aussie scraper! starts on page 0 by default'		
 	if argv is None: argv =sys.argv
 	if argv[1:]:
-		target=int(argv[1])
-	else:target=1
+		targetDate=(argv[1])
+	else:targetDate=1
 
 
-	targetDate=""
+	target=1
 	while True:
 		print 'starting page '+str(target)
 		if target>50:
