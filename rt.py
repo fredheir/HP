@@ -157,11 +157,13 @@ while True:
     if db[targetDb].find({'searchDate':day2}).count()==0:
         targets=getDayLinks(day)
         for url in targets:
-            url='http://rt.com/'+url
-            out=(getRtPage(url))
-            if out is not None:
-                out[0]['searchDate']=day
-                results+=out
+            try:
+                url='http://rt.com/'+url
+                out=(getRtPage(url))
+                if out is not None:
+                    out[0]['searchDate']=day
+                    results+=out
+            except:print url
     else: print 'skipping day'
     day=nextDay(day)
     print '\n\nNEW DAY!: '+str(day)

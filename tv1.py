@@ -32,7 +32,7 @@ db[targetDb].create_index([("_id", pymongo.DESCENDING)])
 def checkField(field,target):
     return db[targetDb].find({field:target}).count()==0
 
-@timeout(30, os.strerror(errno.ETIMEDOUT))
+@timeout(90, os.strerror(errno.ETIMEDOUT))
 def getOneEntry(url):
     d=getUrl(url)
     _id=int(url.split('/')[-1])
