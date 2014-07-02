@@ -77,10 +77,10 @@ def addTwenty(target,targetDate):
 				links.append(link)
 		except:pass
 
-	results=[]
+	#results=[]
 	searchDate=""
 	for n in range(1,21):
-		try:
+		#try:
 			target=tree.xpath("//ol/li["+str(n)+"]/dl/dd/div")
 			relScore=float(target[len(target)-1].text_content().split('score: ')[1].split(')')[0])
 			dateString=tree.xpath("//ol/li["+str(n)+"]/dl/dd/strong")[0].text_content()
@@ -108,10 +108,11 @@ def addTwenty(target,targetDate):
 			stats['ts']=ts
 			stats['searchDate']=searchDate
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
-			results.append(stats)
-		except:pass
-	archive(results)
-	results=[]
+			#results.append(stats)
+			db.aus.insert(stats)
+		#except:pass
+	#archive(results)
+	#results=[]
 	return(searchDate)
 
 		
