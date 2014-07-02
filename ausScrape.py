@@ -113,7 +113,7 @@ def addTwenty(target,targetDate):
 			stats['searchDate']=searchDate
 			print str(stats['_id'])+': '+dateString+' ' +' '+title+ ' nWords: '+str(stats['nWords'])
 			#results.append(stats)
-			db.aus.update({'_id':stats['_id']},{'$set':{stats}})
+			db.aus.insert(stats)
 		except:pass
 	#archive(results)
 	#results=[]
