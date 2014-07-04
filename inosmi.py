@@ -201,9 +201,10 @@ def getAllComments(comments):
 
 
 # In[ ]:
-print db[targetDb].aggregate( [ 
-                    { '$group': { '_id':0, 'minId': { '$max': "$_id"} } }
-                    ] )
+target= db[targetDb].aggregate( [ 
+                    { '$group': { '_id':0, 'maxid': { '$max': "$_id"} } }
+                    ] )[0]['result']['maxid']
+print target
 keep=[]
 
 d=200009
