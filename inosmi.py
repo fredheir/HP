@@ -204,7 +204,7 @@ def getAllComments(comments):
 target= db[targetDb].aggregate( [ 
                     { '$group': { '_id':0, 'maxid': { '$max': "$_id"} } }
                     ] )
-for i in target :print i
+print target['result']
 dd
 keep=[]
 
