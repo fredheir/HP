@@ -145,7 +145,7 @@ def main(argv=None):#take input file
 	formattedDate=datetime.strptime(targetDate,"%Y-%m-%d")
 	while True:
 		tester=targetDate[:7]
-		seen=db[targetDb].update({'_id' : 0})[0]['seen']
+		seen=db[targetDb].find({'_id' : 0})[0]['seen']
 		if tester not in seen:
 			print 'starting page '+str(target)
 			if target>50:
