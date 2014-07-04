@@ -131,7 +131,7 @@ def main(argv=None):#take input file
 		targetDate=(argv[1])
 	else:
 	    if len(targetDate) == 0:
-	    targetDate= '1804-01-01'
+	    	targetDate= '1804-01-01'
 
 	if db[targetDb].find({'_id' : 0}).count()==0:
 	    entry={
