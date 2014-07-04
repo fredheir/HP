@@ -204,11 +204,13 @@ def getAllComments(comments):
 target= db[targetDb].aggregate( [ 
                     { '$group': { '_id':0, 'maxid': { '$max': "$_id"} } }
                     ] )
-print target['result']
-dd
+maxid= target['result'][0]['maxid']
+temp=db[targetDb].find({'_id':maxid})[0]['date']
+d,m,y=temp.split('/')
 keep=[]
 
-d=200009
+d=int(str(y)+str(m))
+print d
 while True:
     getPage(d,verbose=1)
     d=getMonth(d)
