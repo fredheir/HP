@@ -201,8 +201,11 @@ def getAllComments(comments):
 
 
 # In[ ]:
-
+print db[targetDb].aggregate( [ 
+                    { '$group': { '_id':0, 'minId': { '$max': "$_id"} } }
+                    ] )
 keep=[]
+
 d=200009
 while True:
     getPage(d,verbose=1)
