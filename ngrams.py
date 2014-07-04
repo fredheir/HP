@@ -36,7 +36,7 @@ for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 					inspect.append(getEntry(d))
 			else:
 				if words_re.search(d[0]):
-						inspect.append(getEntry(d))
+					inspect.append(getEntry(d))
 					print d[0]
 					keep=1
 				else:
