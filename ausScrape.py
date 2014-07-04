@@ -132,9 +132,6 @@ def main(argv=None):#take input file
 	else:
 	    if len(n) == 0:
 	        n=1800
-	    else:
-	        print n
-	        n=n[0]['max']
 	    targetDate=str(n)+'-01-01'
 
 	targetDate=str(n)+'-01-01'
