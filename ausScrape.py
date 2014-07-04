@@ -164,6 +164,7 @@ def main(argv=None):#take input file
 	        formattedDate=datetime.strptime(targetDate,"%Y-%m-%d")
 	        targetDate = formattedDate+ relativedelta(months=1)
 	        targetDate=str(targetDate).split()[0]
+	        target=1
 	        print targetDate
 
 	
