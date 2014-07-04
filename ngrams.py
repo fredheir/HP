@@ -41,7 +41,7 @@ for fname, url, records in readline_google_store(ngram_len=5,verbose=True):
 					keep=1
 				else:
 					keep=0
-					previous=d[0]f
+					previous=d[0]
 			counter+=1
 			if counter %1000000==0:
 				if counter <= 1000000000:
