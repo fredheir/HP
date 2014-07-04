@@ -137,25 +137,32 @@ def main(argv=None):#take input file
 	        n=n[0]['max']
 	    targetDate=str(n)+'-01-01'
 
-
+	if db[targetDb].find({'_id' : _id}).count()==0:
+		db[targetDb].insert({'tester' : []})
 
 	started=False
 	target=0
+	formattedDate=datetime.strptime(targetDate,"%Y-%m-%d")
 	while True:
-		print 'starting page '+str(target)
-		if target>50:
-			print 'resetting'
-			print searchDate
-			targetDate=searchDate
-			target=0
-		temp=addTwenty(target,targetDate)
-		if len(temp)>3:
-			started=True
-			searchDate=temp
-		elif temp=='s':
-			if started==True:
-				False
-		target+=1
+		tester=targetDate[:7]
+		seen=db[targetDb].update({'_id' : _id})[0]['seen']
+		if tester not in seen:
+			print 'starting page '+str(target)
+			if target>50:
+				print 'resetting'
+				print searchDate
+				targetDate=searchDate
+				target=0
+			temp=addTwenty(target,targetDate)
+			if len(temp)>3:
+				started=True
+				searchDate=temp
+				if searchDate[:7] != tester:
+					db[targetDb].update({'_id' : _id}, { '$push':{'seen': tester}})
+			elif temp=='s':
+				if started==True:
+					False
+			target+=1
 	
 
 if __name__ == "__main__":
