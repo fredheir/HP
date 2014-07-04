@@ -130,7 +130,6 @@ def main(argv=None):#take input file
 	if argv[1:]:
 		targetDate=(argv[1])
 	else:
-	    if len(targetDate) == 0:
 	    	targetDate= '1804-01-01'
 
 	if db[targetDb].find({'_id' : 0}).count()==0:
