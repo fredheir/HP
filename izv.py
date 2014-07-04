@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from hpfunctions import dateUp, dateDown
 from datetime import datetime
 import lxml
