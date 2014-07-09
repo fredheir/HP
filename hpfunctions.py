@@ -131,22 +131,22 @@ def addToQueue3(url):
 		date = tree.xpath("//meta[@name='sailthru.date']/@content")[0]
 	except:
 		date = tree.xpath("//span[@class='posted']/time/@datetime")[0]
-    try:
-	    tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
-	    t=[]
-	    for i in tags:
-	        t+=[i.replace(u'\xa0', u'').lstrip()]
-	    t=stripWhiteList(t)
-    except: t=tree.xpath("//div[contains(@class,'follow_tags')]/a/text()")
-    if len(t)==0:
-        t= tree.xpath("//span[@class='group']/span/a/text()")
-    body=tree.xpath("//*[@class='entry_body_text']/p")
-    if len(body) ==0:
-        body= tree.xpath("//*[@class='articleBody']/p")
-    if len(body) ==0:
-        body= tree.xpath("//*[@id='mainentrycontent']/p")
-    if len(body) ==0:
-        body= tree.xpath("//*[@class='content']/p")
+	try:
+		tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
+		t=[]
+		for i in tags:
+			t+=[i.replace(u'\xa0', u'').lstrip()]
+		t=stripWhiteList(t)
+	except: t=tree.xpath("//div[contains(@class,'follow_tags')]/a/text()")
+	if len(t)==0:
+		t= tree.xpath("//span[@class='group']/span/a/text()")
+	body=tree.xpath("//*[@class='entry_body_text']/p")
+	if len(body) ==0:
+		body= tree.xpath("//*[@class='articleBody']/p")
+	if len(body) ==0:
+		body= tree.xpath("//*[@id='mainentrycontent']/p")
+	if len(body) ==0:
+		body= tree.xpath("//*[@class='content']/p")
 	bod=[]
 	for i in body:
 		bod.append(i.text_content())
