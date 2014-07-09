@@ -117,6 +117,7 @@ def addToQueue3(url):
 	title= tree.xpath("//meta[@property='og:title']/@content")[0]
 	title=stripWhite(title)
 	category= tree.xpath("//meta[@name='category']/@content")[0]
+	author=None
 	try:
 		author = tree.xpath("//meta[@name='author']/@content")[0]
 	except:
@@ -125,7 +126,9 @@ def addToQueue3(url):
 			author=author.split("(")[0]
 			author =author.replace("By ","")
 		except:
-			author=tree.xpath("//a[@rel='author']//text()")[0]
+			try:
+				author=tree.xpath("//a[@rel='author']//text()")[0]
+			except:pass
 	author=stripWhite(author)
 	try:
 		date = tree.xpath("//meta[@name='sailthru.date']/@content")[0]
