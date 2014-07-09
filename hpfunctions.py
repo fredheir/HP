@@ -120,24 +120,33 @@ def addToQueue3(url):
 	try:
 		author = tree.xpath("//meta[@name='author']/@content")[0]
 	except:
-		author=tree.xpath("//div[@class='articleBody']/p/strong")[0].text_content()
-		author=author.split("(")[0]
-		author =author.replace("By ","")
+		try:
+			author=tree.xpath("//div[@class='articleBody']/p/strong")[0].text_content()
+			author=author.split("(")[0]
+			author =author.replace("By ","")
+		except:
+			author=tree.xpath("//a[@rel='author']//text()")[0]
 	author=stripWhite(author)
 	try:
 		date = tree.xpath("//meta[@name='sailthru.date']/@content")[0]
 	except:
 		date = tree.xpath("//span[@class='posted']/time/@datetime")[0]
-	try:
-		tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
-		t=[]
-		for i in tags:
-			t+=[i.replace(u'\xa0', u'').lstrip()]
-		t=stripWhiteList(t)
-	except: t=tree.xpath("//div[contains(@class,'follow_tags')]/a/text()")
-	body=tree.xpath("//*[@class='entry_body_text']/p")
-	if len(body) ==0:
-		body= tree.xpath("//*[@class='articleBody']/p")
+    try:
+	    tags= tree.xpath("//div[contains(@class,'follow_tags')]/span")[0].text_content().split(",")
+	    t=[]
+	    for i in tags:
+	        t+=[i.replace(u'\xa0', u'').lstrip()]
+	    t=stripWhiteList(t)
+    except: t=tree.xpath("//div[contains(@class,'follow_tags')]/a/text()")
+    if len(t)==0:
+        t= tree.xpath("//span[@class='group']/span/a/text()")
+    body=tree.xpath("//*[@class='entry_body_text']/p")
+    if len(body) ==0:
+        body= tree.xpath("//*[@class='articleBody']/p")
+    if len(body) ==0:
+        body= tree.xpath("//*[@id='mainentrycontent']/p")
+    if len(body) ==0:
+        body= tree.xpath("//*[@class='content']/p")
 	bod=[]
 	for i in body:
 		bod.append(i.text_content())
@@ -277,7 +286,7 @@ def getComments(id):
 	comments=[]
 	i=0
 	n=99
-	while i<10:#Limit to 1000 comments
+	while i<1000:#Limit to 1000 comments
 		if i==0:
 			url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=9"
 		else:

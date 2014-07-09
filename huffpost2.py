@@ -96,12 +96,13 @@ def executeScript(d):
 				todo[i]["comments"]=coms
 				todo[i]["nComments"]=len(coms)
 			else: print "duplicated entry skipped"
-			metaData.append(todo[i])
+			#metaData.append(todo[i])
+			archive(db,todo[i])
 
 		#d=dateUp(d)
-		archive(db,metaData)
-		checkAllIn(db,metaData)
-		metaData=[]
+		#archive(db,metaData)
+		#checkAllIn(db,metaData)
+		#metaData=[]
 
 def main(argv=None):#take input file
     if argv is None:
