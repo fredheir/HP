@@ -22,7 +22,7 @@ def executeScript(d):
 	import pymongo
 	from pymongo import MongoClient
 	client = MongoClient()
-	db = client['hp']
+	db = client['hp2']
 
 	db.metadatadb.create_index([("_id", pymongo.DESCENDING)])
 	#d = datetime.strptime("20130101", "%Y%m%d")

@@ -168,7 +168,7 @@ for entry in db.metadatadb.find({"comments":{"$exists":True},"nComments":{"$gt":
 						nWords,
 						typos,
 						caps,
-						nPunct,nNames,nComma,nSent,avSentLen,avWordLen,nOffensive,avSyllables,threeSylPlus]
+						nPunct,nNames,nComma,nSent,avSentLen,avWordLen,nOffensive,avSyllables,threeSylPlus,words]
 				counter=0
 				for i in result:
 					counter+=1

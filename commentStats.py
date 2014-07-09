@@ -122,10 +122,12 @@ def content_fraction(text):
 def getCommentStats(out):
 	tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 	results=[]
+	from nltk.corpus import stopwords
+	sl=stopwords.words('english')
 	for comment in out:
 		if "text" in comment:
 			text=comment["text"]
-			nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+			nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
 			nComma=text.count(",")
 			nSent=len(tokenizer.tokenize(text))
 			TAG_RE = re.compile(r'<.*>')
@@ -139,19 +141,25 @@ def getCommentStats(out):
 			except: avWordLen=0
 			nOffensive =  len(set(profanity).intersection(text.lower().split()))
 			avSyllables,threeSylPlus=sylList(words)
+			nStop=len(filter(set(words).__contains__, sl))
 			#shortPercentage=content_fraction(words)
 			result={"_id":comment["_id"],
 					"entry_id":comment["entry_id"],
 					"parent_id": comment["parent_id"],
 					"user_id": comment["user_id"],
 					"created_at": comment["created_at"],
-					"nWords": nWords,
-					"typos": typos,
-					"caps": caps,
+					"nWords": len(text.split()),
+					"nRecWords": nRecWords
+					"nTypos": typos,
+					"nCaps": caps,
+					"text":text,
+					"words":words,
+					"names":pos,
 					"nPunct": nPunct,
 					"nNames": nNames,
 					"nComma": nComma,
 					"nSent": nSent,
+					"nStop":nStop,
 					"avSentLen": avSentLen,
 					"avWordLen": avWordLen,
 					"nOffensive": nOffensive,
@@ -182,13 +190,20 @@ def getCommentStats(out):
 					#"parent_id": comment["parent_id"],
 					#"user_id": comment["user_id"],
 					"created_at": comment["created_time"],
-					"nWords": nWords,
-					"typos": typos,
-					"caps": caps,
+					"nWords": len(text.split()),
+					"nRecWords": nRecWords
+					"nTypos": typos,
+					"nCaps": caps,
+					"text":text,
+					"words":words,
+					"names":pos,
+					"nTypos": typos,
+					"nCaps": caps,
 					"nPunct": nPunct,
 					"nNames": nNames,
 					"nComma": nComma,
 					"nSent": nSent,
+					"nStop":nStop,
 					"avSentLen": avSentLen,
 					"avWordLen": avWordLen,
 					"nOffensive": nOffensive,
