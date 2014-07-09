@@ -149,7 +149,7 @@ def getCommentStats(out):
 					"user_id": comment["user_id"],
 					"created_at": comment["created_at"],
 					"nWords": len(text.split()),
-					"nRecWords": nRecWords
+					"nRecWords": nRecWords,
 					"nTypos": typos,
 					"nCaps": caps,
 					"text":text,
@@ -171,7 +171,7 @@ def getCommentStats(out):
 			results.append(result)
 		else:
 			text=comment["message"]
-			nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+			nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
 			nComma=text.count(",")
 			nSent=len(tokenizer.tokenize(text))
 			TAG_RE = re.compile(r'<.*>')
@@ -185,13 +185,14 @@ def getCommentStats(out):
 			except: avWordLen=0
 			nOffensive =  len(set(profanity).intersection(text.lower().split()))
 			avSyllables,threeSylPlus=sylList(words)
+			nStop=len(filter(set(words).__contains__, sl))
 			result={"_id":comment["id"],
 					#"entry_id":comment["entry_id"],
 					#"parent_id": comment["parent_id"],
 					#"user_id": comment["user_id"],
 					"created_at": comment["created_time"],
 					"nWords": len(text.split()),
-					"nRecWords": nRecWords
+					"nRecWords": nRecWords,
 					"nTypos": typos,
 					"nCaps": caps,
 					"text":text,
