@@ -117,7 +117,7 @@ def addToQueue3(url):
 	title= tree.xpath("//meta[@property='og:title']/@content")[0]
 	title=stripWhite(title)
 	category= tree.xpath("//meta[@name='category']/@content")[0]
-	author=None
+	author=""
 	try:
 		author = tree.xpath("//meta[@name='author']/@content")[0]
 	except:
