@@ -13,7 +13,7 @@
 from hpfunctions import *
 from commentStats import *
 from datetime import date, timedelta, datetime
-
+from time import time
 
 
 def executeScript(d):
@@ -88,7 +88,14 @@ def executeScript(d):
 				print("number of files before topup: "+str(len(todo)-counter))
 			if type(_id) != 'NoneType' and db.metadatadb.find({"_id":_id}).limit(1).count() ==0  and todo[i]["url"] !="none":
 				coms=commentSelector(d,_id,todo[i]["url"])
-				comStats=getCommentStats(coms)		
+				getCom=0
+				while getCom ==0:
+					try:
+						comStats=getCommentStats(coms)		
+						getCom=1
+					except:
+						print 'sleeping'
+						sleep(1)
 				if len (comStats)>0:
 					try: 
 						db.comStats.insert(comStats,continue_on_error=True)
