@@ -218,6 +218,7 @@ def getCommentStats(out):
 		while getCom ==0:
 			try:
 				results.append(getOneCom(comment))
+				getCom=1
 			except:
 				print 'SLEEEPING_extra'
 				pass
