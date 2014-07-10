@@ -95,7 +95,7 @@ def executeScript(d):
 						getCom=1
 					except:
 						print 'sleeping'
-						time.sleep(1)
+						time.sleep(5)
 				if len (comStats)>0:
 					try: 
 						db.comStats.insert(comStats,continue_on_error=True)
