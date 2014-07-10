@@ -209,6 +209,7 @@ def getOneCom(comment):
 
 
 def getCommentStats(out):
+	import time
 	tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 	results=[]
 	from nltk.corpus import stopwords
@@ -221,6 +222,7 @@ def getCommentStats(out):
 				getCom=1
 			except:
 				print 'SLEEEPING_extra'
+				time.sleep(5)
 				pass
 	print 'debug test: len results == '+str(len(results))
 	return results
