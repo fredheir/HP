@@ -164,7 +164,6 @@ def getOneCom(comment):
 				#"shortPercentage": shortPercentage
 				}
 		counter=0
-		results.append(result)
 	else:
 		text=comment["message"]
 		nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
