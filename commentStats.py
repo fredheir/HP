@@ -218,7 +218,9 @@ def getCommentStats(out):
 		while getCom ==0:
 			try:
 				results.append(getOneCom(comment))
-			except:pass
+			except:
+				print 'SLEEEPING'
+				pass
 	print 'debug test: len results == '+str(len(results))
 	return results
 
