@@ -13,7 +13,7 @@
 from hpfunctions import *
 from commentStats import *
 from datetime import date, timedelta, datetime
-from time import time
+import time
 
 
 def executeScript(d):
@@ -95,7 +95,7 @@ def executeScript(d):
 						getCom=1
 					except:
 						print 'sleeping'
-						sleep(1)
+						time.sleep(1)
 				if len (comStats)>0:
 					try: 
 						db.comStats.insert(comStats,continue_on_error=True)
