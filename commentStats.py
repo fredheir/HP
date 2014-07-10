@@ -117,6 +117,95 @@ def content_fraction(text):
     content = [w for w in text if w.lower() not in stopwords]
     return float(len(content)) / float(len(text))
 
+def getOneCom(comment):
+	if "text" in comment:
+		text=comment["text"]
+		nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+		nComma=text.count(",")
+		nSent=len(tokenizer.tokenize(text))
+		TAG_RE = re.compile(r'<.*>')
+		text=TAG_RE.sub('', text)
+		text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
+		text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
+		text=enc_trans(text)
+		avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+		try:
+			avWordLen=sum([len(x) for x in words])/float(len(words))
+		except: avWordLen=0
+		nOffensive =  len(set(profanity).intersection(text.lower().split()))
+		avSyllables,threeSylPlus=sylList(words)
+		nStop=len(filter(set(words).__contains__, sl))
+		#shortPercentage=content_fraction(words)
+		result={"_id":comment["_id"],
+				"entry_id":comment["entry_id"],
+				"parent_id": comment["parent_id"],
+				"user_id": comment["user_id"],
+				"created_at": comment["created_at"],
+				"nWords": len(text.split()),
+				"nRecWords": nRecWords,
+				"nTypos": typos,
+				"nCaps": caps,
+				"text":comment['text'],
+				"words":' '.join(words),
+				"names":pos,
+				"nPunct": nPunct,
+				"nNames": nNames,
+				"nComma": nComma,
+				"nSent": nSent,
+				"nStop":nStop,
+				"avSentLen": avSentLen,
+				"avWordLen": avWordLen,
+				"nOffensive": nOffensive,
+				"avSyllables": avSyllables,
+				"threeSylPlus": threeSylPlus#,
+				#"shortPercentage": shortPercentage
+				}
+		counter=0
+		results.append(result)
+	else:
+		text=comment["message"]
+		nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
+		nComma=text.count(",")
+		nSent=len(tokenizer.tokenize(text))
+		TAG_RE = re.compile(r'<.*>')
+		text=TAG_RE.sub('', text)
+		text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
+		text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
+		text=enc_trans(text)
+		avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+		try:
+			avWordLen=sum([len(x) for x in words])/float(len(words))
+		except: avWordLen=0
+		nOffensive =  len(set(profanity).intersection(text.lower().split()))
+		avSyllables,threeSylPlus=sylList(words)
+		nStop=len(filter(set(words).__contains__, sl))
+		result={"_id":comment["id"],
+				#"entry_id":comment["entry_id"],
+				#"parent_id": comment["parent_id"],
+				#"user_id": comment["user_id"],
+				"created_at": comment["created_time"],
+				"nWords": len(text.split()),
+				"nRecWords": nRecWords,
+				"nTypos": typos,
+				"nCaps": caps,
+				"text":comment['message'],
+				"words":' '.join(words),
+				"names":pos,
+				"nTypos": typos,
+				"nCaps": caps,
+				"nPunct": nPunct,
+				"nNames": nNames,
+				"nComma": nComma,
+				"nSent": nSent,
+				"nStop":nStop,
+				"avSentLen": avSentLen,
+				"avWordLen": avWordLen,
+				"nOffensive": nOffensive,
+				"avSyllables": avSyllables,
+				"threeSylPlus": threeSylPlus
+				}
+		counter=0
+	return result
 
 
 def getCommentStats(out):
@@ -125,94 +214,12 @@ def getCommentStats(out):
 	from nltk.corpus import stopwords
 	sl=stopwords.words('english')
 	for comment in out:
-		if "text" in comment:
-			text=comment["text"]
-			nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
-			nComma=text.count(",")
-			nSent=len(tokenizer.tokenize(text))
-			TAG_RE = re.compile(r'<.*>')
-			text=TAG_RE.sub('', text)
-			text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
-			text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
-			text=enc_trans(text)
-			avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+		getCom=0
+		while getCom ==0:
 			try:
-				avWordLen=sum([len(x) for x in words])/float(len(words))
-			except: avWordLen=0
-			nOffensive =  len(set(profanity).intersection(text.lower().split()))
-			avSyllables,threeSylPlus=sylList(words)
-			nStop=len(filter(set(words).__contains__, sl))
-			#shortPercentage=content_fraction(words)
-			result={"_id":comment["_id"],
-					"entry_id":comment["entry_id"],
-					"parent_id": comment["parent_id"],
-					"user_id": comment["user_id"],
-					"created_at": comment["created_at"],
-					"nWords": len(text.split()),
-					"nRecWords": nRecWords,
-					"nTypos": typos,
-					"nCaps": caps,
-					"text":comment['text'],
-					"words":' '.join(words),
-					"names":pos,
-					"nPunct": nPunct,
-					"nNames": nNames,
-					"nComma": nComma,
-					"nSent": nSent,
-					"nStop":nStop,
-					"avSentLen": avSentLen,
-					"avWordLen": avWordLen,
-					"nOffensive": nOffensive,
-					"avSyllables": avSyllables,
-					"threeSylPlus": threeSylPlus#,
-					#"shortPercentage": shortPercentage
-					}
-			counter=0
-			results.append(result)
-		else:
-			text=comment["message"]
-			nRecWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
-			nComma=text.count(",")
-			nSent=len(tokenizer.tokenize(text))
-			TAG_RE = re.compile(r'<.*>')
-			text=TAG_RE.sub('', text)
-			text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
-			text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
-			text=enc_trans(text)
-			avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
-			try:
-				avWordLen=sum([len(x) for x in words])/float(len(words))
-			except: avWordLen=0
-			nOffensive =  len(set(profanity).intersection(text.lower().split()))
-			avSyllables,threeSylPlus=sylList(words)
-			nStop=len(filter(set(words).__contains__, sl))
-			result={"_id":comment["id"],
-					#"entry_id":comment["entry_id"],
-					#"parent_id": comment["parent_id"],
-					#"user_id": comment["user_id"],
-					"created_at": comment["created_time"],
-					"nWords": len(text.split()),
-					"nRecWords": nRecWords,
-					"nTypos": typos,
-					"nCaps": caps,
-					"text":comment['message'],
-					"words":' '.join(words),
-					"names":pos,
-					"nTypos": typos,
-					"nCaps": caps,
-					"nPunct": nPunct,
-					"nNames": nNames,
-					"nComma": nComma,
-					"nSent": nSent,
-					"nStop":nStop,
-					"avSentLen": avSentLen,
-					"avWordLen": avWordLen,
-					"nOffensive": nOffensive,
-					"avSyllables": avSyllables,
-					"threeSylPlus": threeSylPlus
-					}
-			counter=0
-			results.append(result)
+				results.append(getOneCom(comment))
+			except:pass
+	print 'debug test: len results == '+str(len(results))
 	return results
 
 
