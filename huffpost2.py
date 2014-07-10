@@ -88,14 +88,14 @@ def executeScript(d):
 				print("number of files before topup: "+str(len(todo)-counter))
 			if type(_id) != 'NoneType' and db.metadatadb.find({"_id":_id}).limit(1).count() ==0  and todo[i]["url"] !="none":
 				coms=commentSelector(d,_id,todo[i]["url"])
-				getCom=0
-				while getCom ==0:
-					try:
-						comStats=getCommentStats(coms)		
-						getCom=1
-					except:
-						print 'sleeping'
-						time.sleep(5)
+				# getCom=0
+				# while getCom ==0:
+				# 	try:
+				comStats=getCommentStats(coms)		
+					# 	getCom=1
+					# except:
+					# 	print 'sleeping'
+					# 	time.sleep(5)
 				if len (comStats)>0:
 					try: 
 						db.comStats.insert(comStats,continue_on_error=True)
