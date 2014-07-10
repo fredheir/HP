@@ -20,6 +20,9 @@ queue=file_contents("bad-words.txt")
 profanity=queue.splitlines()
 profanity=profanity[1:]
 
+tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+from nltk.corpus import stopwords
+sl=stopwords.words('english')
 
 tagger = ner.SocketNER(host='localhost', port=8089)
 
@@ -210,10 +213,8 @@ def getOneCom(comment):
 
 def getCommentStats(out):
 	import time
-	tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+
 	results=[]
-	from nltk.corpus import stopwords
-	sl=stopwords.words('english')
 	for comment in out:
 		getCom=0
 		while getCom ==0:
