@@ -218,13 +218,13 @@ def getCommentStats(out):
 	for comment in out:
 		getCom=0
 		while getCom ==0:
-			try:
+			#try:
 				results.append(getOneCom(comment))
 				getCom=1
-			except:
-				print 'SLEEEPING_extra'
-				time.sleep(5)
-				pass
+			#except:
+			#	print 'SLEEEPING_extra'
+			#	time.sleep(5)
+			#	pass
 	print 'debug test: len results == '+str(len(results))
 	return results
 
