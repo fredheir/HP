@@ -11,12 +11,14 @@ def getComDat(ent):
 	names=[]
 	c= ent['comments']
 	for i in c:
-		entry=(str(i['user_id']),str(i['parent_user']))			
-		results.append(entry)
-		if str(i['user_id']) not in names:
-			names.append(str(i['user_id']))
-		if str(i['parent_user']) not in names:
-			names.append(str(i['parent_user']))
+		try:
+			entry=(str(i['user_id']),str(i['parent_user']))			
+			results.append(entry)
+			if str(i['user_id']) not in names:
+				names.append(str(i['user_id']))
+			if str(i['parent_user']) not in names:
+				names.append(str(i['parent_user']))
+		except KeyError:pass
 	return results,names
 
 def setupGraph(results,names):
@@ -62,9 +64,9 @@ def getLayout(g):
 
 counter=0
 for ent in db.metadatadb.find():
-	#if not 'g_density' in ent:
-		counter+=1
-		if counter %100==0:print str(float(counter)/1000) +' thousand'
+	counter+=1
+	if counter %100==0:print str(float(counter)/1000) +' thousand'
+	if not 'g_density' in ent:
 		results,names=getComDat(ent)
 		results=[i for i in results if i[1] != '0']
 		names=[i for i in names if i != '0']
@@ -80,8 +82,9 @@ for ent in db.metadatadb.find():
 		try:
 			print db.metadatadb.find({'_id':ent['_id']})[0]['g_density']
 		except:'error'
-	#else:
-	#	print 'seen'
+	else:
+		pass
+
 
 
 
