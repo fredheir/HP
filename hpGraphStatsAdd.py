@@ -67,6 +67,7 @@ for ent in db.metadatadb.find():
 	    results,names=getComDat(ent)
 	    if len (results)>0:
 	        try:
+	    		print len(results)
 	            g=setupGraph(results,names)
 	            vs= getLayout(g)
 	            temp=getGraphStats(g)
