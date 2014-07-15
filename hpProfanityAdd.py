@@ -51,7 +51,6 @@ for ref in db.metadatadb.find():
                                             }
                                     except:pass
                                     temp1.append(entry)
-    print len(temp1)
     db.metadatadb.update({'_id':ref['_id']},{'$set':{
 'profEdges':temp1,
 'profNodes':temp2
