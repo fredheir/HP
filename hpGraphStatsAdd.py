@@ -64,13 +64,12 @@ counter=0
 for ent in db.metadatadb.find():
 	#if not 'g_density' in ent:
 		counter+=1
-		if counter %2==0:print str(float(counter)/1000) +' thousand'
+		if counter %100==0:print str(float(counter)/1000) +' thousand'
 		results,names=getComDat(ent)
 		results=[i for i in results if i[1] != '0']
 		names=[i for i in names if i != '0']
 		if len (results)>0:
 			try:
-				print len(results)
 				g=setupGraph(results,names)
 				#vs= getLayout(g)
 				temp=getGraphStats(g)
