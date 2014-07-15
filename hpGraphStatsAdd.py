@@ -24,17 +24,17 @@ def setupGraph(results,names):
 	g.add_vertices(len(names))
 	g.vs['name']=names
 	g.add_edges(results)
-	g.es['weight']=1
-	g=g.simplify(combine_edges=sum,loops=False)
+	#g.es['weight']=1
+	#g=g.simplify(combine_edges=sum,loops=False)
 	return g
 
 def getGraphStats(g):
 	return {
-		'g_meanBetweenness' :mean(g.betweenness(weights='weight')),
+		'g_meanBetweenness' :mean(g.betweenness(),
 		'g_density' :g.density(),
 		'g_meanEccentricity' :mean(g.eccentricity()),
 		'g_averagePathLength': g.average_path_length(),
-		'g_diameter' :g.diameter(weights='weight'),
+		'g_diameter' :g.diameter(),
 		#print g.community_multilevel(weights='weight')
 		'g_transitivityUndirected' :g.transitivity_undirected(),
 		'g_transitivityAvglocal' :g.transitivity_avglocal_undirected(),
@@ -50,7 +50,7 @@ def getLayout(g):
 	deg= [3+i for i in deg]
 	vs["vertex_size"] = deg
 
-	vs['edge_width']=g.es['weight']
+	#vs['edge_width']=g.es['weight']
 	vs["vertex_label_size"] = 10
 	vs["vertex_label_dist"] = 3
 	vs["edge_arrow_size"] = 0.5
@@ -58,25 +58,28 @@ def getLayout(g):
 	vs["label_dist"] = 100
 	return vs
 
-	#out=[]
+
+
 counter=0
 for ent in db.metadatadb.find():
-	if not 'g_density' in ent:
+	#if not 'g_density' in ent:
 		counter+=1
 		if counter %2==0:print str(float(counter)/1000) +' thousand'
 		results,names=getComDat(ent)
+		results=[i for i in results if i[1] != '0']
+		names=[i for i in names if i != '0']
 		if len (results)>0:
 			try:
 				print len(results)
 				g=setupGraph(results,names)
-				vs= getLayout(g)
+				#vs= getLayout(g)
 				temp=getGraphStats(g)
 				temp['id']=ent['_id']
 				temp['timestamp']=ent['timestamp']		  	
 				db.metadatadb.update({'_id':ent['_id']},{'$set':temp})
 			except:print 'error'
-	else:
-		print 'seen'
+	#else:
+	#	print 'seen'
 
 
 
