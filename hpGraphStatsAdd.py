@@ -30,8 +30,8 @@ def setupGraph(results,names):
 
 def getGraphStats(g):
 	return {
-		'g_meanBetweenness' :mean(g.betweenness(),
-		'g_density' :g.density(),
+		'g_meanBetweenness' :mean(g.betweenness()),
+		'g_density':g.density(),
 		'g_meanEccentricity' :mean(g.eccentricity()),
 		'g_averagePathLength': g.average_path_length(),
 		'g_diameter' :g.diameter(),
