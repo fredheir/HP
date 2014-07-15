@@ -78,6 +78,9 @@ for ent in db.metadatadb.find():
 				temp['timestamp']=ent['timestamp']		  	
 				db.metadatadb.update({'_id':ent['_id']},{'$set':temp})
 			except:print 'error'
+		try:
+			print db.metadatadb.find({'_id':ent['_id']})[0]['g_density']
+		except:'error'
 	#else:
 	#	print 'seen'
 
