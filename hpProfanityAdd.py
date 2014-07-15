@@ -22,8 +22,8 @@ for ref in db.metadatadb.find():
     #if ref['category'] in target:
     counter+=1
     if counter%100==0:print str(float(counter)/1000.0)+' thousand'
-    if 'profNodes' not in ref:
-            for ent in db.comStats.find({'entry_id':ref['_id']}):
+    #if 'profNodes' not in ref:
+    for ent in db.comStats.find({'entry_id':ref['_id']}):
                     #print ent['entry_id']
                     terms=ent['words'].lower().split()
                     found= [t for t in terms if t in profanity]
@@ -51,7 +51,7 @@ for ref in db.metadatadb.find():
                                             }
                                     except:pass
                                     temp1.append(entry)
-
+    print len(temp1)
     db.metadatadb.update({'_id':ref['_id']},{'$set':{
 'profEdges':temp1,
 'profNodes':temp2
