@@ -39,7 +39,8 @@ def getGraphStats(g):
 		'g_diameter' :g.diameter(),
 		#print g.community_multilevel(weights='weight')
 		'g_transitivityUndirected' :g.transitivity_undirected(),
-		'g_transitivityAvglocal' :g.transitivity_avglocal_undirected(),
+		'g_transitivityAvglocalZERO' :g.transitivity_avglocal_undirected(mode=TRANSITIVITT_ZERO),
+		'g_transitivityAvglocalNAN' :g.transitivity_avglocal_undirected(mode=TRANSITIVITY_NAN),
 		'g_meanEigenvectorCentrality' :mean(g. eigenvector_centrality ()),
 		'g_meanDeg' :mean(g.degree())
 }

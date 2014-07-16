@@ -6,8 +6,7 @@ import string
 from nltk import*
 import nltk
 from nltk.corpus import cmudict
-import from
-ner hpfunctions import stripWhite, file_contents
+from hpfunctions import stripWhite, file_contents
 import string
 
 client = MongoClient()
