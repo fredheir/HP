@@ -86,7 +86,8 @@ def sylList(wordList):
 	return av,outres
 
 
-def getBaseStats(comment,getTypos=False):
+def getBaseStats(comment):
+	#t
 	tagger = ner.SocketNER(host='localhost', port=8089)
 	remove_list = ['html', 'http','https']
 	names=0
@@ -126,8 +127,7 @@ def getBaseStats(comment,getTypos=False):
 				else:recList.append(word)
 				if word.isupper()==True:
 					caps +=1
-	if getTypos==True:
-		typos=typosList
+	typos=typosList
 	return nWords,typos,caps,p1-p2,recList,nNames,pos#reclist= recognised words, and those with first cap (names)
 
 
