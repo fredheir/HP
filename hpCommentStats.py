@@ -127,7 +127,7 @@ def getBaseStats(comment):
 				else:recList.append(word)
 				if word.isupper()==True:
 					caps +=1
-	typos=typosList
+	typos=typoList
 	return nWords,typos,caps,p1-p2,recList,nNames,pos#reclist= recognised words, and those with first cap (names)
 
 
