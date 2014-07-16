@@ -9,6 +9,7 @@ import nltk
 from nltk.corpus import cmudict
 from hpfunctions import stripWhite, file_contents
 import string
+import ner
 
 client = MongoClient()
 db = client['hp-database']
