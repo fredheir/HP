@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import codecs
 import pymongo
 from pymongo import MongoClient
