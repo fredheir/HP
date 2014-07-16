@@ -150,13 +150,13 @@ for entry in db.metadatadb.find({"comments":{"$exists":True},"nComments":{"$gt":
 				nWords,typos,caps,nPunct,words,nNames,pos=getBaseStats(comment)
 				nComma=tt.count(",")
 				nSent=len(tokenizer.tokenize(tt))
-	            TAG_RE = re.compile(r'<.*>')
-	            text=TAG_RE.sub('', text)
-	            text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
-	            text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
-	            avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
-	            try:
-	            	avWordLen=sum([len(x) for x in words])/float(len(words))
+				TAG_RE = re.compile(r'<.*>')
+				text=TAG_RE.sub('', text)
+				text=re.sub(r'http.* ', ' ', text, flags=re.MULTILINE)
+				text=re.sub(r'www.* ', ' ', text, flags=re.MULTILINE)
+				avSentLen= len(text.split())/float(nSent)#(len(comment["text"])/float(l))-l
+				try:
+					avWordLen=sum([len(x) for x in words])/float(len(words))
 				except: avWordLen=0
 				nOffensive =  len(set(profanity).intersection(tt.lower().split()))
 				avSyllables,threeSylPlus=sylList(words)
