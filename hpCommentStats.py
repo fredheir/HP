@@ -86,7 +86,7 @@ def sylList(wordList):
 	return av,outres
 
 
-def getBaseStats(comment):
+def getBaseStats(comment,getTypos=False):
 	tagger = ner.SocketNER(host='localhost', port=8089)
 	remove_list = ['html', 'http','https']
 	names=0
@@ -94,6 +94,7 @@ def getBaseStats(comment):
 	caps=0
 	nWords=0
 	recList=[]
+	typoList=[]
 	out=stripWhite(comment["text"])
 	p1=len(out)
 	out=re.sub('/', ' ', out)
@@ -120,10 +121,13 @@ def getBaseStats(comment):
 		if len(word)>0 and word not in ["http","https","html"]:
 			#if word[0].islower():
 				if wordLookup(word)==False:
+					typosList.append(word)
 					typos+=1
 				else:recList.append(word)
 				if word.isupper()==True:
 					caps +=1
+	if getTypos==True:
+		typos=typosList
 	return nWords,typos,caps,p1-p2,recList,nNames,pos#reclist= recognised words, and those with first cap (names)
 
 
