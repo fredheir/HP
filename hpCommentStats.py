@@ -122,7 +122,7 @@ def getBaseStats(comment):
 		if len(word)>0 and word not in ["http","https","html"]:
 			#if word[0].islower():
 				if wordLookup(word)==False:
-					typosList.append(word)
+					typoList.append(word)
 					typos+=1
 				else:recList.append(word)
 				if word.isupper()==True:
