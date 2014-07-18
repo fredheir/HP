@@ -13,7 +13,6 @@ import ner
 from hpfunctions import stripWhite, file_contents
 import string
 import enchant
-import urllib2
 
 ukDict = enchant.Dict("en_UK")
 usDict = enchant.Dict("en_US")
