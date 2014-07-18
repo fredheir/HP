@@ -348,7 +348,7 @@ def getComments(_id):
 		try:
 			db[tdb].insert(users2,continue_on_error=True)
 		except pymongo.errors.DuplicateKeyError:pass
-		return comments
+	return comments
 
 def getComment(entry):
 	cc=[]
