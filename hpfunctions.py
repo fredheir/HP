@@ -306,9 +306,9 @@ def getComments(id):
 		temp=json.loads(string)
 		try:
 			dat['models']+=temp['models']
-		except KeyError:pass
+			users+=[temp['users'][b] for b in temp['users']]
+		except KeyError:return []
 		
-		users+=[temp['users'][b] for b in temp['users']]
 		print "conversations added: "+str(len(dat['models']))
 		if(len(temp["models"])<n):
 			print 'END HERE'
@@ -316,7 +316,7 @@ def getComments(id):
 
 	print 'getting missing replies'
 	dat,users= getMissingReplies(dat,users)
-	print users[0]
+
 	print "AFTER MISSING REPLIES added: "+str(len(dat['models']))
 
 	print 'formatting comments on root'
