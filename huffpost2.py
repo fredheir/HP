@@ -9,6 +9,7 @@
 #does rulechange broaden debate by welcoming commenters from outside the thematic comfort zone, or does it close off commenting, leaving it to a smaller elite group that feels authorised to comment?
 #do comment levels recover after a rule change?
 #Are certain subjects more susceptible to spamming / self-censorship, and is this showsn by rule changes?
+from commentStats import *
 
 from hpfunctions import *
 from commentStats import *
