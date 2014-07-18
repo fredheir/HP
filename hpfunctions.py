@@ -591,17 +591,18 @@ def getMore3(p,_id,count=10):
 		if 'users' in additions:
 			out['users']=additions['users']
 		yield out
-		for a in additions['models']:
-				if len(a['replies']['models'])>0:
-					for resid in a['replies']['models']:
-						yield resid
-						a['replies']['models']=[]
-				if a['stats']['replies']>0:
-					yield a
-					for sub in getMore3(a,_id):
+		if 'models' in additions:
+			for a in additions['models']:
+					if len(a['replies']['models'])>0:
+						for resid in a['replies']['models']:
+							yield resid
+							a['replies']['models']=[]
+					if a['stats']['replies']>0:
 						yield a
-				else:
-					yield a
+						for sub in getMore3(a,_id):
+							yield a
+					else:
+						yield a
 					
 					
 def getMissingReplies(dat,users,_id):
