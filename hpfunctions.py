@@ -588,7 +588,8 @@ def getMore3(p,_id,count=10):
 	additions=getDescendants(p,_id)
 	if additions is not None: #and 'models' in additions:
 		out={} 
-		out['users']=additions['users']
+		if 'users' in additions:
+			out['users']=additions['users']
 		yield out
 		for a in additions['models']:
 				if len(a['replies']['models'])>0:
