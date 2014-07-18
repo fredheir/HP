@@ -348,7 +348,7 @@ def getComment(entry):
 		"text":i["text"],
 		"vertical_id":i["vertical_id"],
 		"parent_id":i["parent_id"],
-		"parent_user":parent_user,
+		#"parent_user":parent_user,
 		"entry_id":i["entry_id"],
 		"publication":"HP",
 		'nSeen':nSeen,
