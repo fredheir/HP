@@ -566,7 +566,7 @@ def getDescendants(i,_id):
 		return None
 	try:
 		newEntries= identifyParents(dat2,lev,pid)
-	except: newEntries=dat
+	except: newEntries=dat2
 	#newEntries = identifyNSeen(newEntries,lev)
 
 	return(newEntries)
