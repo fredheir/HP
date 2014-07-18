@@ -322,6 +322,15 @@ def getComments(id):
 	print len(comments)
 	for i in dat['models']:
 		comments+=getComment(i['replies'])
+
+	seen=[]
+	keep=[]
+	for i in comments:
+		if i['_id'] not in seen:
+			keep.append(i)
+			seen.append(i['_id'])
+	comments=keep
+
 	for i in users:
 		i['_id']=i['id']
 
