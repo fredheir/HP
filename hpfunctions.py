@@ -619,8 +619,9 @@ def getMissingReplies(dat,users,_id):
 						if 'users' in hit:
 							users.append(hit['users'])
 						else:
-							if hit['id'] not in [i['id'] for i in t['replies']['models']]:
-								t['replies']['models'].append(hit)
+							if 'id' in hit:
+								if hit['id'] not in [i['id'] for i in t['replies']['models']]:
+									t['replies']['models'].append(hit)
 		ab=(len(t['replies']['models']))
 		if ab>aa:
 			print str(ab-aa) +' more comments added! SUCCESS!'
