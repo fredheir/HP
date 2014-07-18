@@ -299,7 +299,6 @@ def getComments(_id):
 	i=0
 	n=98
 	while i<99999:#Limit to 1000 comments
-		print i
 		url=getRootCommentUrl(i,_id,n,dat)
 		i+=1
 		string = getUrl(url)
@@ -586,7 +585,7 @@ def getMore3(p,_id,count=10):
 						a['replies']['models']=[]
 				if a['stats']['replies']>0:
 					yield a
-					for sub in getMore3(a):
+					for sub in getMore3(a,_id):
 						yield a
 				else:
 					yield a
