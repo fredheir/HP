@@ -545,6 +545,7 @@ def getDescendants(i):
 		dat2=json.loads(string)#['models']
 
 	elif i['stats']['children']>1 or i['stats']['replies']>0:
+		print url
 		url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
 		string = getUrl(url)
 		print string
