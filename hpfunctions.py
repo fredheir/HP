@@ -307,13 +307,14 @@ def getComments(id):
 		try:
 			dat['models']+=temp['models']
 			users+=[temp['users'][b] for b in temp['users']]
-		except KeyError:return []
+		except KeyError:pass
 		
 		print "conversations added: "+str(len(dat['models']))
 		if(len(temp["models"])<n):
 			print 'END HERE'
 			break
 
+	if len(dat['models'])==0:return []
 	print 'getting missing replies'
 	dat,users= getMissingReplies(dat,users)
 
@@ -334,9 +335,10 @@ def getComments(id):
 	for i in users:
 		i['_id']=i['id']
 
-	try:
-		db[tdb].insert(users,continue_on_error=True)
-	except pymongo.errors.DuplicateKeyError:pass
+	if len(users)>0:
+		try:
+			db[tdb].insert(users,continue_on_error=True)
+		except pymongo.errors.DuplicateKeyError:pass
 	return comments
 
 def getComment(entry):
