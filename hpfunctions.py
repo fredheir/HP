@@ -300,7 +300,6 @@ def getComments(id):
 	while i<99999:#Limit to 1000 comments
 		print i
 		url=getRootCommentUrl(i,id,n,dat)
-		print url
 		i+=1
 		string = getUrl(url)
 		temp=json.loads(string)
@@ -316,7 +315,6 @@ def getComments(id):
 
 	print 'getting missing replies'
 	dat,users= getMissingReplies(dat,users)
-	print users[0]
 	print "AFTER MISSING REPLIES added: "+str(len(dat['models']))
 
 	print 'formatting comments on root'
@@ -591,7 +589,7 @@ def getMissingReplies(dat,users):
 		counter+=1
 		#print t['nSeen']
 		nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
-		if t['stats']['replies']<len(t['replies']['models']):	  
+		if t['stats']['replies']>len(t['replies']['models']):	  
 			if t['stats']['children']<=nParentReps:
 				for page in t['replies']['models']:
 					for hit in getMore3(page):
