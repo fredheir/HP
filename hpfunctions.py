@@ -553,8 +553,9 @@ def getDescendants(i,_id):
 
 	if i['stats']['children']==0 and i['stats']['replies']==0:
 		return None
-
-	newEntries= identifyParents(dat2,lev,pid)
+	try:
+		newEntries= identifyParents(dat2,lev,pid)
+	except: newEntries=dat
 	#newEntries = identifyNSeen(newEntries,lev)
 
 	return(newEntries)
