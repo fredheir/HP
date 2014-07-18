@@ -531,35 +531,36 @@ def identifyParents(dat2,lev,pid):
 
 def getDescendants(i):
 
-	t=i['stats']['replies']
+    t=i['stats']['replies']
 
-	if 'models' not in i['replies']:
-		i['replies']['models']=[]
-	if t==0:
-		return None
+    if 'models' not in i['replies']:
+        i['replies']['models']=[]
+    if t==0:
+        return None
 
-	pid=i['id']
-	lev=i['level']
-	if i['stats']['children']==1:
-		url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/descendants?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"
-		string = getUrl(url)
-		dat2=json.loads(string)#['models']
+    pid=i['id']
+    lev=i['level']
+    if i['stats']['children']==1:
+        url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/descendants?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"
+        string = getUrl(url)
+        dat2=json.loads(string)#['models']
 
-	elif i['stats']['children']>1:
-		url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
-		string = getUrl(url)
-		dat2={}
-		temp=json.loads(string)#['models']
-		for pp in temp:
-			dat2[pp]=temp[pp]
+    elif i['stats']['children']>1 or i['stats']['replies']>0:
+        url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
+        string = getUrl(url)
+        dat2={}
+        temp=json.loads(string)#['models']
+        for pp in temp:
+            dat2[pp]=temp[pp]
 
-	if i['stats']['children']==0:
-		return None
+    if i['stats']['children']==0 and i['stats']['replies']==0:
+        return None
 
-	newEntries= identifyParents(dat2,lev,pid)
-	#newEntries = identifyNSeen(newEntries,lev)
+    newEntries= identifyParents(dat2,lev,pid)
+    #newEntries = identifyNSeen(newEntries,lev)
 
-	return(newEntries)
+    return(newEntries)
+
 
 def getRootCommentUrl(i,id,n,dat):
 	base="http://www.huffingtonpost.com/conversations/entries/"
