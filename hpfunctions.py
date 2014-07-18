@@ -589,6 +589,9 @@ def getMissingReplies(dat,users):
 		counter+=1
 		#print t['nSeen']
 		nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
+		print t['stats']['replies']
+		print len(t['replies']['models'])
+		print 
 		if t['stats']['replies']>len(t['replies']['models']):	  
 			if t['stats']['children']<=nParentReps:
 				for page in t['replies']['models']:
