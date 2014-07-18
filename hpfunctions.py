@@ -306,9 +306,9 @@ def getComments(id):
 		temp=json.loads(string)
 		try:
 			dat['models']+=temp['models']
+			users+=[temp['users'][b] for b in temp['users']]
 		except KeyError:pass
 			
-		users+=[temp['users'][b] for b in temp['users']]
 		print "conversations added: "+str(len(dat['models']))
 		if(len(temp["models"])<n):
 			print 'END HERE'
