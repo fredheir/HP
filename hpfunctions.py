@@ -351,8 +351,8 @@ def getComment(entry):
 		"parent_user":parent_user,
 		"entry_id":i["entry_id"],
 		"publication":"HP",
-		"site":"com"}
 		'nSeen':nSeen,
+		"site":"com"}
 		cc.append(dict)
 		if i["replies"]["options"]["total"]>0:
 			cc+=(getComment(i["replies"]))
