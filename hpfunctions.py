@@ -286,7 +286,7 @@ def getBaseLinks(d):
 	return links
 
 
-def getComments(id):
+def getComments(_id):
 	import pymongo
 	from pymongo import MongoClient
 	client = MongoClient()
@@ -300,7 +300,7 @@ def getComments(id):
 	n=98
 	while i<99999:#Limit to 1000 comments
 		print i
-		url=getRootCommentUrl(i,id,n,dat)
+		url=getRootCommentUrl(i,_id,n,dat)
 		i+=1
 		string = getUrl(url)
 		temp=json.loads(string)
@@ -315,7 +315,7 @@ def getComments(id):
 			break
 
 	print 'getting missing replies'
-	dat,users= getMissingReplies(dat,users)
+	dat,users= getMissingReplies(dat,users,_id)
 	print "AFTER MISSING REPLIES added: "+str(len(dat['models']))
 
 	print 'formatting comments on root'
@@ -528,7 +528,7 @@ def identifyParents(dat2,lev,pid):
 				temp['models'][j]['parent_id']=temp['models'][x]['id']
 	return temp
 
-def getDescendants(i):
+def getDescendants(i,_id):
 
 	t=i['stats']['replies']
 
@@ -540,12 +540,12 @@ def getDescendants(i):
 	pid=i['id']
 	lev=i['level']
 	if i['stats']['children']==1:
-		url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/descendants?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"
+		url="http://www.huffingtonpost.com/conversations/entries/"+str(_id)+"/comments/"+str(pid)+"/descendants?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"
 		string = getUrl(url)
 		dat2=json.loads(string)#['models']
 
 	elif i['stats']['children']>1 or i['stats']['replies']>0:
-		url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
+		url="http://www.huffingtonpost.com/conversations/entries/"+str(_id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
 		print url
 		string = getUrl(url)
 		print string
@@ -575,9 +575,9 @@ def getRootCommentUrl(i,id,n,dat):
 		url = base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+'&'+options
 	return url
 
-def getMore3(p,count=10):
+def getMore3(p,count=10,_id):
 	import urllib3
-	additions=getDescendants(p)
+	additions=getDescendants(p,_id)
 	if additions is not None: #and 'models' in additions:
 		out={} 
 		out['users']=additions['users']
@@ -595,7 +595,7 @@ def getMore3(p,count=10):
 					yield a
 					
 					
-def getMissingReplies(dat,users):
+def getMissingReplies(dat,users,_id):
 	counter=0
 	for t in dat['models']:
 		aa=(len(t['replies']['models']))
@@ -606,7 +606,7 @@ def getMissingReplies(dat,users):
 		if t['stats']['replies']>len(t['replies']['models']):
 			if t['stats']['children']<=nParentReps:
 				for page in t['replies']['models']:
-					for hit in getMore3(page):
+					for hit in getMore3(page,_id):
 						if 'users' in hit:
 							users.append(hit['users'])
 						else:
