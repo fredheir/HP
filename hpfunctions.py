@@ -427,6 +427,7 @@ def getFbComment(url):
 
 
 def getUrl(url):
+	import urllib3
 	http = urllib3.PoolManager()
 	rx = http.request('GET', url).data
 	return(rx)
@@ -546,6 +547,7 @@ def getDescendants(i):
 	elif i['stats']['children']>1 or i['stats']['replies']>0:
 		url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
 		string = getUrl(url)
+		print string
 		dat2={}
 		temp=json.loads(string)#['models']
 		for pp in temp:
@@ -573,6 +575,7 @@ def getRootCommentUrl(i,id,n,dat):
 	return url
 
 def getMore3(p,count=10):
+	import urllib3
 	additions=getDescendants(p)
 	if additions is not None: #and 'models' in additions:
 		out={} 
