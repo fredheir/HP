@@ -331,11 +331,22 @@ def getComments(_id):
 			seen.append(i['_id'])
 	comments=keep
 
-	for i in users:
-		i['_id']=i['id']
+	t=users
+	users2=[]
+	for i in t:
+		 if 'id' in i:
+			  users2.append(i)
+			  #print i['id']
+			  pass
+		 else:
+			  for x in i:
+					i[x]['_id']=i[x]['id']
+					users2.append(i[x])
+
+
 
 	try:
-		db[tdb].insert(users,continue_on_error=True)
+		db[tdb].insert(users2,continue_on_error=True)
 	except pymongo.errors.DuplicateKeyError:pass
 	return comments
 
@@ -647,10 +658,10 @@ def getUserPics(users):
 # 	return(dat)
 
 # for (i in 16:20){
-#   print (i)
-#   target <- urls[i]
-#   articles <- rbind(articles,getArticleData(target))
-#   output <- getArticle(articles$id[i])
-#   users <- rbind(users,output[[2]])
-#   entries <- rbind(entries,output[[1]])
+#	print (i)
+#	target <- urls[i]
+#	articles <- rbind(articles,getArticleData(target))
+#	output <- getArticle(articles$id[i])
+#	users <- rbind(users,output[[2]])
+#	entries <- rbind(entries,output[[1]])
 # }
