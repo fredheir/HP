@@ -580,10 +580,11 @@ def getMore3(p,count=10):
 				else:
 					yield a
 					
+					
 def getMissingReplies(dat,users):
 	counter=0
 	for t in dat['models']:
-		#print 'len before '+ str(len(t['replies']['models']))
+		aa=(len(t['replies']['models']))
 		if counter%10==0:print 'added conversations for '+str(counter)+' N to go: '+str(len(dat['models']))
 		counter+=1
 		#print t['nSeen']
@@ -597,9 +598,10 @@ def getMissingReplies(dat,users):
 						else:
 							if hit['id'] not in [i['id'] for i in t['replies']['models']]:
 								t['replies']['models'].append(hit)
-		#print 'len after: '+ str(len(t['replies']['models']))
+		ab=(len(t['replies']['models']))
+		if ab>aa:
+			print str(ab-aa) +' more comments added! SUCCESS!'
 	return dat,users
-
 
 def getUserPics(users):
 	for i in users:
