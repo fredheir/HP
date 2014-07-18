@@ -324,6 +324,15 @@ def getComments(id):
 		comments+=getComment(i['replies'])
 	for i in users:
 		i['_id']=i['id']
+
+	seen=[]
+	keep=[]
+	for i in users:
+	    if i['id'] not in seen:
+	        keep.append(i)
+	    seen.append(i['id'])
+	users=keep
+
 	db[tdb].insert(users,continue_on_error=True)
 	return comments
 
