@@ -575,7 +575,7 @@ def getRootCommentUrl(i,id,n,dat):
 		url = base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+'&'+options
 	return url
 
-def getMore3(p,count=10,_id):
+def getMore3(p,_id,count=10):
 	import urllib3
 	additions=getDescendants(p,_id)
 	if additions is not None: #and 'models' in additions:
