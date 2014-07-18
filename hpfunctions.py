@@ -286,31 +286,46 @@ def getBaseLinks(d):
 
 
 def getComments(id):
-	comments=[]
-	i=0
-	n=99
-	while i<1000:#Limit to 1000 comments
-		if i==0:
-			url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=9"
-		else:
-			tg=[]
-			for x in dat["models"]:
-				tg.append(x["id"]) #+=[i["id"]]
-			target=min(tg)
-			#print("\n\n\n Now targetting commments since: "+str(target)+"")
-			url = "http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+"&order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=9"
-		i+=1
-		string = getUrl(url)
-		dat=json.loads(string)
-		newCom=getComment(0,dat)
-		if newCom=="error":
-			return(comments)
-		comments+=newCom
-		print "comments added: "+str(len(comments))
-		if(len(dat["models"])<99):
-			return comments
-	return comments
+	import pymongo
+	from pymongo import MongoClient
+	client = MongoClient()
+	db = client['hp3']
+	tdb='users'
 
+	counter=0
+	users=[]
+	dat={'models':[]}
+	i=0
+	n=98
+	while i<99999:#Limit to 1000 comments
+	    print i
+	    url=getRootCommentUrl(i,id,n,dat)
+	    print url
+	    i+=1
+	    string = getUrl(url)
+	    temp=json.loads(string)
+	    dat['models']+=temp['models']
+	    
+	    users+=[temp['users'][b] for b in temp['users']]
+	    print "conversations added: "+str(len(dat['models']))
+	    if(len(temp["models"])<n):
+	        print 'END HERE'
+	        break
+
+	print 'getting missing replies'
+	dat,users= getMissingReplies(dat,users)
+	print users[0]
+	print "AFTER MISSING REPLIES added: "+str(len(dat['models']))
+
+	print 'formatting comments on root'
+	comments=getComment(dat)
+	print len(comments)
+	for i in dat['models']:
+	    comments+=getComment(i['replies'])
+	for i in users:
+	    i['_id']=i['id']
+	db[tdb].insert(users,continue_on_error=True)
+	return comments
 
 def getComment(parent_user,entry):
 	cc=[]
@@ -324,7 +339,10 @@ def getComment(parent_user,entry):
 		"_id":i["id"],
 		"user_id":i["user_id"],
 		"created_at": i["created_at"],
+		"stats":i['stats'],
+		"permalink":i['permalink'],
 		"text":i["text"],
+		"vertical_id":i["vertical_id"],
 		"parent_id":i["parent_id"],
 		"parent_user":parent_user,
 		"entry_id":i["entry_id"],

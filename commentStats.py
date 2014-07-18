@@ -244,3 +244,181 @@ punct=re.sub("'","",punct)
 def enc_trans(s):
 	s = s.encode('utf-8').translate(None, punct)
 	return s.decode('utf-8')
+
+
+
+
+def enterFile(url):
+    if url[0]=='/':url='http://www.huffingtonpost.com'+url
+    f = urllib2.urlopen(url)
+    data = f.read()
+    oid = fs.put(data)
+    return oid
+
+def getComment(parent_user,entry):
+    cc=[]
+    counter=0
+    if not "models" in entry:
+        print "apparently 1/100 chance error or commenting disabled"
+        return "error"
+    for i in entry["models"]:
+        try:
+            nSeen=len(i['replies']['models'])
+        except:
+            nSeen=0
+        counter+=1
+        dict={
+        "_id":i["id"],
+        "user_id":i["user_id"],
+        "created_at": i["created_at"],
+        "text":i["text"],
+        "parent_id":i["parent_id"],
+        "parent_user":parent_user,
+        "entry_id":i["entry_id"],
+        "publication":"HP",
+        "level":i['level'],
+        "stats":i['stats'],
+        'nSeen':nSeen,
+        "site":"com"}
+        cc.append(dict)
+        if i["replies"]["options"]["total"]>0:
+            cc+=(getComment(i["user_id"],i["replies"]))
+    return cc
+
+
+def getMore3(p,count=10):
+    additions=getDescendants(p)
+    if additions is not None: #and 'models' in additions:
+        out={} 
+        out['users']=additions['users']
+        yield out
+        for a in additions['models']:
+                if len(a['replies']['models'])>0:
+                    for resid in a['replies']['models']:
+                        yield resid
+                        a['replies']['models']=[]
+                if a['stats']['replies']>0:
+                    yield a
+                    for sub in getMore3(a):
+                        yield a
+                else:
+                    yield a
+
+def identifyParents(dat2,lev,pid):
+    temp=dat2.copy()
+    new={}
+    for x in range(len(temp['models'])):
+        if temp['models'][x]['level']==(lev+1):
+            temp['models'][x]['parent_id']=pid
+
+    for x in range(len(temp['models'])):
+        d=temp['models'][x]['level']
+        for j in range(x+1,len(temp['models'])):
+            d2=temp['models'][j]['level']
+            if d2==d+1:
+                temp['models'][j]['parent_id']=temp['models'][x]['id']
+    return temp
+
+def getDescendants(i):
+
+    t=i['stats']['replies']
+
+    if 'models' not in i['replies']:
+        i['replies']['models']=[]
+    if t==0:
+        return None
+
+    pid=i['id']
+    lev=i['level']
+    if i['stats']['children']==1:
+        url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/descendants?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"
+        string = getUrl(url)
+        dat2=json.loads(string)#['models']
+
+    elif i['stats']['children']>1:
+        url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"        
+        string = getUrl(url)
+        dat2={}
+        temp=json.loads(string)#['models']
+        for pp in temp:
+            dat2[pp]=temp[pp]
+
+    if i['stats']['children']==0:
+        return None
+
+    newEntries= identifyParents(dat2,lev,pid)
+    #newEntries = identifyNSeen(newEntries,lev)
+
+    return(newEntries)
+
+def getRootCommentUrl(i,id,n,dat):
+    base="http://www.huffingtonpost.com/conversations/entries/"
+    options="order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=98"
+    if i==0:
+        url=base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&"+options
+    else:
+        tg=[]
+        for x in dat["models"]:
+            tg.append(x["id"]) #+=[i["id"]]
+        target=min(tg)
+        url = base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+'&'+options
+    return url
+
+
+
+def getMissingReplies(dat,users):
+    counter=0
+    for t in dat['models']:
+        if counter%10==0:print 'added conversations for '+str(counter)+' N to go: '+str(len(dat['models']))
+        counter+=1
+        #print t['nSeen']
+        nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
+        if t['stats']['replies']<len(t['replies']['models']):      
+            if t['stats']['children']<=nParentReps:
+                for page in t['replies']['models']:
+                    for hit in getMore3(page):
+                        if 'users' in hit:
+                            users.append(hit['users'])
+                        else:
+                            if hit['id'] not in [i['id'] for i in t['replies']['models']]:
+                                t['replies']['models'].append(hit)
+    return dat,users                    
+
+
+def getUserPics(users):
+    for i in users:
+        url=i['photo_url']
+        if url[0]=='/':url='http://www.huffingtonpost.com'+url
+        i['oid']=enterFile(url)
+    return users
+
+def getComment(entry):
+    cc=[]
+    counter=0
+    if not "models" in entry:
+        print "apparently 1/100 chance error or commenting disabled"
+        return "error"
+    for i in entry["models"]:
+        try:
+            nSeen=len(i['replies']['models'])
+        except:
+            nSeen=0
+        counter+=1
+        dict={
+        "_id":i["id"],
+        "user_id":i["user_id"],
+        "created_at": i["created_at"],
+        "text":i["text"],
+        "parent_id":i["parent_id"],
+        #"parent_user":parent_user,
+        "entry_id":i["entry_id"],
+        "publication":"HP",
+        "level":i['level'],
+        "stats":i['stats'],
+        'nSeen':nSeen,
+        "site":"com"}
+        cc.append(dict)
+        if i["replies"]["options"]["total"]>0:
+            cc+=(getComment(i["replies"]))
+    return cc
+
