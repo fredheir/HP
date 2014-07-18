@@ -310,7 +310,7 @@ def getComments(id):
 		except KeyError:pass
 		
 		print "conversations added: "+str(len(dat['models']))
-		if(len(temp["models"])<n):
+		if 'models' not in temp or (len(temp["models"])<n):
 			print 'END HERE'
 			break
 
