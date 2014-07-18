@@ -12,6 +12,7 @@ from lxml import html
 import lxml
 from datetime import date, timedelta, datetime
 import codecs
+from commentStats import *
 
 def archive(db,target,dat):
 	import pymongo
