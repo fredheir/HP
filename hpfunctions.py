@@ -307,7 +307,7 @@ def getComments(id):
 		try:
 			dat['models']+=temp['models']
 			users+=[temp['users'][b] for b in temp['users']]
-		except KeyError:pass
+		except KeyError:return []
 			
 		print "conversations added: "+str(len(dat['models']))
 		if(len(temp["models"])<n):
