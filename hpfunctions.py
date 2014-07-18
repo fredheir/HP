@@ -298,21 +298,21 @@ def getComments(id):
 	i=0
 	n=98
 	while i<99999:#Limit to 1000 comments
-	    print i
-	    url=getRootCommentUrl(i,id,n,dat)
-	    print url
-	    i+=1
-	    string = getUrl(url)
-	    temp=json.loads(string)
-	    try:
-	        dat['models']+=temp['models']
-	    except KeyError:pass
-	    
-	    users+=[temp['users'][b] for b in temp['users']]
-	    print "conversations added: "+str(len(dat['models']))
-	    if(len(temp["models"])<n):
-	        print 'END HERE'
-	        break
+		print i
+		url=getRootCommentUrl(i,id,n,dat)
+		print url
+		i+=1
+		string = getUrl(url)
+		temp=json.loads(string)
+		try:
+			dat['models']+=temp['models']
+		except KeyError:pass
+		
+		users+=[temp['users'][b] for b in temp['users']]
+		print "conversations added: "+str(len(dat['models']))
+		if(len(temp["models"])<n):
+			print 'END HERE'
+			break
 
 	print 'getting missing replies'
 	dat,users= getMissingReplies(dat,users)
@@ -323,13 +323,13 @@ def getComments(id):
 	comments=getComment(dat)
 	print len(comments)
 	for i in dat['models']:
-	    comments+=getComment(i['replies'])
+		comments+=getComment(i['replies'])
 	seen=[]
 	keep=[]
 	for i in comments:
-	    if i['_id'] not in seen:
-	        keep.append(i)
-	        seen.append(i['_id'])
+		if i['_id'] not in seen:
+			keep.append(i)
+			seen.append(i['_id'])
 	comments=keep
 	for i in users:
 		i['_id']=i['id']
@@ -574,42 +574,42 @@ def getRootCommentUrl(i,id,n,dat):
 
 
 def getMore3(p,count=10):
-    additions=getDescendants(p)
-    if additions is not None: #and 'models' in additions:
-        out={} 
-        out['users']=additions['users']
-        yield out
-        for a in additions['models']:
-                if len(a['replies']['models'])>0:
-                    for resid in a['replies']['models']:
-                        yield resid
-                        a['replies']['models']=[]
-                if a['stats']['replies']>0:
-                    yield a
-                    for sub in getMore3(a):
-                        yield a
-                else:
-                    yield a
-                    
+	additions=getDescendants(p)
+	if additions is not None: #and 'models' in additions:
+		out={} 
+		out['users']=additions['users']
+		yield out
+		for a in additions['models']:
+				if len(a['replies']['models'])>0:
+					for resid in a['replies']['models']:
+						yield resid
+						a['replies']['models']=[]
+				if a['stats']['replies']>0:
+					yield a
+					for sub in getMore3(a):
+						yield a
+				else:
+					yield a
+					
 def getMissingReplies(dat,users):
-    counter=0
-    for t in dat['models']:
-        #print 'len before '+ str(len(t['replies']['models']))
-        if counter%10==0:print 'added conversations for '+str(counter)+' N to go: '+str(len(dat['models']))
-        counter+=1
-        #print t['nSeen']
-        nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
-        if t['stats']['replies']>len(t['replies']['models']):
-            if t['stats']['children']<=nParentReps:
-                for page in t['replies']['models']:
-                    for hit in getMore3(page):
-                        if 'users' in hit:
-                            users.append(hit['users'])
-                        else:
-                            if hit['id'] not in [i['id'] for i in t['replies']['models']]:
-                                t['replies']['models'].append(hit)
-        #print 'len after: '+ str(len(t['replies']['models']))
-    return dat,users
+	counter=0
+	for t in dat['models']:
+		#print 'len before '+ str(len(t['replies']['models']))
+		if counter%10==0:print 'added conversations for '+str(counter)+' N to go: '+str(len(dat['models']))
+		counter+=1
+		#print t['nSeen']
+		nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
+		if t['stats']['replies']>len(t['replies']['models']):
+			if t['stats']['children']<=nParentReps:
+				for page in t['replies']['models']:
+					for hit in getMore3(page):
+						if 'users' in hit:
+							users.append(hit['users'])
+						else:
+							if hit['id'] not in [i['id'] for i in t['replies']['models']]:
+								t['replies']['models'].append(hit)
+		#print 'len after: '+ str(len(t['replies']['models']))
+	return dat,users
 
 def getUserPics(users):
 	for i in users:
