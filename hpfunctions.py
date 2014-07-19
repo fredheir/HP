@@ -362,6 +362,8 @@ def getComment(entry):
 		except:
 			nSeen=0
 		counter+=1
+		if 'permalink' not in i:
+			i['permalink']=None
 		dict={
 		"_id":i["id"],
 		"user_id":i["user_id"],
@@ -564,7 +566,7 @@ def getDescendants(i,_id):
 				dat2[pp]=temp[pp]
 		except:
 			print url
-			
+
 
 	if i['stats']['children']==0 and i['stats']['replies']==0:
 		return None
