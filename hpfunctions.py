@@ -364,6 +364,8 @@ def getComment(entry):
 		counter+=1
 		if 'permalink' not in i:
 			i['permalink']=None
+		if 'created_at' not in i:
+			i['created_at'] =None
 		dict={
 		"_id":i["id"],
 		"user_id":i["user_id"],
