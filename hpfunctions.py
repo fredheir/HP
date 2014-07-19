@@ -558,9 +558,13 @@ def getDescendants(i,_id):
 		url="http://www.huffingtonpost.com/conversations/entries/"+str(_id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
 		string = getUrl(url)
 		dat2={}
-		temp=json.loads(string)#['models']
-		for pp in temp:
-			dat2[pp]=temp[pp]
+		try:
+			temp=json.loads(string)#['models']
+			for pp in temp:
+				dat2[pp]=temp[pp]
+		except:
+			print url
+			
 
 	if i['stats']['children']==0 and i['stats']['replies']==0:
 		return None
