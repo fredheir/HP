@@ -101,7 +101,7 @@ def executeScript(d):
 					try: 
 						db.comStats.insert(comStats,continue_on_error=True)
 					except pymongo.errors.DuplicateKeyError:pass
-				todo[i]["comments"]=coms
+				#todo[i]["comments"]=coms
 				todo[i]["nComments"]=len(coms)
 			else: print "duplicated entry skipped"
 			#metaData.append(todo[i])
