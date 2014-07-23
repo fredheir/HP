@@ -288,7 +288,7 @@ def getBaseLinks(d):
 def getComments(id):
 	comments=[]
 	i=0
-	n=99
+	n=98
 	while i<1000:#Limit to 1000 comments
 		if i==0:
 			url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=9"
@@ -307,7 +307,7 @@ def getComments(id):
 			return(comments)
 		comments+=newCom
 		print "comments added: "+str(len(comments))
-		if(len(dat["models"])<99):
+		if(len(dat["models"])<98):
 			return comments
 	return comments
 
