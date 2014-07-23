@@ -591,26 +591,28 @@ def getRootCommentUrl(i,id,n,dat):
 		target=min(tg)
 		url = base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+'&'+options
 	return url
-
-def getMore3(p,_id,count=10):
-	additions=getDescendants(p,_id)
-	if additions is not None: #and 'models' in additions:
-		out={} 
-		if 'users' in additions:
-			out['users']=additions['users']
-		yield out
-		if 'models' in additions:
-			for a in additions['models']:
-					if len(a['replies']['models'])>0:
-						for resid in a['replies']['models']:
-							yield resid
-							a['replies']['models']=[]
-					if a['stats']['replies']>0:
-						yield a
-						for sub in getMore3(a,_id):
+	
+def getMore3(p,_id,count=1):
+	if count<20:
+		count+=1
+		additions=getDescendants(p,_id)
+		if additions is not None: #and 'models' in additions:
+			out={} 
+			if 'users' in additions:
+				out['users']=additions['users']
+			yield out
+			if 'models' in additions:
+				for a in additions['models']:
+						if len(a['replies']['models'])>0:
+							for resid in a['replies']['models']:
+								yield resid
+								a['replies']['models']=[]
+						if a['stats']['replies']>0:
 							yield a
-					else:
-						yield a
+							for sub in getMore3(a,_id,count):
+								yield a
+						else:
+							yield a
 					
 					
 def getMissingReplies(dat,users,_id):
