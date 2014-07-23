@@ -595,7 +595,6 @@ def getRootCommentUrl(i,id,n,dat):
 def getMore3(p,_id,count=1):
 	if count<20:
 		count+=1
-		print count
 		additions=getDescendants(p,_id)
 		if additions is not None: #and 'models' in additions:
 			out={} 
@@ -618,9 +617,10 @@ def getMore3(p,_id,count=1):
 					
 def getMissingReplies(dat,users,_id):
 	counter=0
+	sinceLast=0
 	for t in dat['models']:
 		aa=(len(t['replies']['models']))
-		if counter%10==0:print 'added conversations for '+str(counter)+' N to go: '+str(len(dat['models']))
+		if counter%30==0:print 'added conversations for %s. N to go: %s. Added %s extra comments since last' % (counter,len(dat['models']),sinceLast)
 		counter+=1
 		#print t['nSeen']
 		nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
@@ -636,7 +636,7 @@ def getMissingReplies(dat,users,_id):
 									t['replies']['models'].append(hit)
 		ab=(len(t['replies']['models']))
 		if ab>aa:
-			print str(ab-aa) +' more comments added! SUCCESS!'
+			sinceLast+=(ab-aa)
 	return dat,users
 
 def getUserPics(users):
