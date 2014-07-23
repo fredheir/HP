@@ -623,7 +623,7 @@ def getMissingReplies(dat,users,_id):
 	for t in dat['models']:
 		ent=t['entry_id']
 		aa=(len(t['replies']['models']))
-		if counter%50==0:print 'added conversations for %s. N to go: %s. Added %s extra comments. (file: %s)' % (counter,len(dat['models'])-counter,,sinceLast,ent)
+		if counter%50==0:print 'added conversations for %s. N to go: %s. Added %s extra comments. (file: %s)' % (counter,len(dat['models'])-counter,sinceLast,ent)
 		counter+=1
 		#print t['nSeen']
 		nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
