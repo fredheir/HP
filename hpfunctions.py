@@ -595,6 +595,7 @@ def getRootCommentUrl(i,id,n,dat):
 def getMore3(p,_id,count=1):
 	if count<20:
 		count+=1
+		print count
 		additions=getDescendants(p,_id)
 		if additions is not None: #and 'models' in additions:
 			out={} 
