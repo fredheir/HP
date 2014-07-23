@@ -310,7 +310,7 @@ def getComments(_id):
 
 		print "conversations added: "+str(len(dat['models']))
 		if(len(temp["models"])<n):
-			print 'END HERE'
+			#print 'END HERE'
 			break
 
 	print 'getting missing replies'
@@ -612,7 +612,9 @@ def getMore3(p,_id,count=1):
 							getMore3(a,_id,count+1)
 						else:
 							yield a
-	else: yield None
+	else: 
+		print 'ALERT: MAX Recursion depth exceeded'
+		yield None
 					
 					
 def getMissingReplies(dat,users,_id):
