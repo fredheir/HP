@@ -610,7 +610,7 @@ def getMore3(p,_id,count=1):
 								a['replies']['models']=[]
 						if a['stats']['replies']>0:
 							yield a
-							getMore3(a,_id,count+1):
+							getMore3(a,_id,count+1)
 						else:
 							yield a
 	else: yield None
