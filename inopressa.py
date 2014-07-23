@@ -45,7 +45,9 @@ def getRubric(rubric):
                         entry['category']=rubric
                         results.append(entry)
                     except:pass
-        else:print 'already seen'
+        else:
+            print 'already seen'
+            cont=0
         print str(len(results))+' in results'
         archive(db,targetDb,results)
         results=[]
