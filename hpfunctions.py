@@ -610,11 +610,10 @@ def getMore3(p,_id,count=1):
 								a['replies']['models']=[]
 						if a['stats']['replies']>0:
 							yield a
-							for sub in getMore3(a,_id,count):
-								yield a
+							getMore3(a,_id,count+1):
 						else:
 							yield a
-	else: return
+	else: yield None
 					
 					
 def getMissingReplies(dat,users,_id):
