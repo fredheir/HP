@@ -13,6 +13,7 @@ import ner
 from hpfunctions import stripWhite, file_contents
 import string
 import enchant
+
 ukDict = enchant.Dict("en_UK")
 usDict = enchant.Dict("en_US")
 
@@ -244,3 +245,4 @@ punct=re.sub("'","",punct)
 def enc_trans(s):
 	s = s.encode('utf-8').translate(None, punct)
 	return s.decode('utf-8')
+

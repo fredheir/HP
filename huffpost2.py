@@ -9,6 +9,7 @@
 #does rulechange broaden debate by welcoming commenters from outside the thematic comfort zone, or does it close off commenting, leaving it to a smaller elite group that feels authorised to comment?
 #do comment levels recover after a rule change?
 #Are certain subjects more susceptible to spamming / self-censorship, and is this showsn by rule changes?
+from commentStats import *
 
 from hpfunctions import *
 from commentStats import *
@@ -22,7 +23,7 @@ def executeScript(d):
 	import pymongo
 	from pymongo import MongoClient
 	client = MongoClient()
-	db = client['hp2']
+	db = client['hp3']
 
 	db.metadatadb.create_index([("_id", pymongo.DESCENDING)])
 	#d = datetime.strptime("20130101", "%Y%m%d")
@@ -100,7 +101,7 @@ def executeScript(d):
 					try: 
 						db.comStats.insert(comStats,continue_on_error=True)
 					except pymongo.errors.DuplicateKeyError:pass
-				todo[i]["comments"]=coms
+				#todo[i]["comments"]=coms
 				todo[i]["nComments"]=len(coms)
 			else: print "duplicated entry skipped"
 			#metaData.append(todo[i])
