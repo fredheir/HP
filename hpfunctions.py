@@ -12,6 +12,7 @@ from lxml import html
 import lxml
 from datetime import date, timedelta, datetime
 import codecs
+import urllib2
 
 def archive(db,target,dat):
 	import pymongo
@@ -285,55 +286,105 @@ def getBaseLinks(d):
 	return links
 
 
-def getComments(id):
-	comments=[]
+def getComments(_id):
+	import pymongo
+	from pymongo import MongoClient
+	client = MongoClient()
+	db = client['hp3']
+	tdb='users'
+
+	counter=0
+	users=[]
+	dat={'models':[]}
 	i=0
 	n=98
-	while i<1000:#Limit to 1000 comments
-		if i==0:
-			url="http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=9"
-		else:
-			tg=[]
-			for x in dat["models"]:
-				tg.append(x["id"]) #+=[i["id"]]
-			target=min(tg)
-			#print("\n\n\n Now targetting commments since: "+str(target)+"")
-			url = "http://www.huffingtonpost.com/conversations/entries/"+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+"&order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=9"
+	while i<99999:#Limit to 1000 comments
+		url=getRootCommentUrl(i,_id,n,dat)
 		i+=1
 		string = getUrl(url)
-		dat=json.loads(string)
-		newCom=getComment(0,dat)
-		if newCom=="error":
-			return(comments)
-		comments+=newCom
-		print "comments added: "+str(len(comments))
-		if(len(dat["models"])<98):
-			return comments
+		temp=json.loads(string)
+		try:
+			dat['models']+=temp['models']
+			users+=[temp['users'][b] for b in temp['users']]
+		except KeyError:return []
+
+		print "conversations added: "+str(len(dat['models']))
+		if(len(temp["models"])<n):
+			print 'END HERE'
+			break
+
+	print 'getting missing replies'
+	dat,users= getMissingReplies(dat,users,_id)
+	print "AFTER MISSING REPLIES added: "+str(len(dat['models']))
+
+	print 'formatting comments on root'
+	comments=getComment(dat)
+	print len(comments)
+	for i in dat['models']:
+		comments+=getComment(i['replies'])
+
+	seen=[]
+	keep=[]
+	for i in comments:
+		if i['_id'] not in seen:
+			keep.append(i)
+			seen.append(i['_id'])
+	comments=keep
+
+	t=users
+	users2=[]
+	for i in t:
+		 if 'id' in i:
+			  users2.append(i)
+			  #print i['id']
+			  pass
+		 else:
+			  for x in i:
+					i[x]['_id']=i[x]['id']
+					users2.append(i[x])
+
+
+	if len (users2)>0:
+		try:
+			db[tdb].insert(users2,continue_on_error=True)
+		except pymongo.errors.DuplicateKeyError:pass
 	return comments
 
-
-def getComment(parent_user,entry):
+def getComment(entry):
 	cc=[]
 	counter=0
 	if not "models" in entry:
 		print "apparently 1/100 chance error or commenting disabled"
 		return "error"
 	for i in entry["models"]:
+		try:
+			nSeen=len(i['replies']['models'])
+		except:
+			nSeen=0
 		counter+=1
+		if 'permalink' not in i:
+			i['permalink']=None
+		if 'created_at' not in i:
+			i['created_at'] =None
 		dict={
 		"_id":i["id"],
 		"user_id":i["user_id"],
 		"created_at": i["created_at"],
+		"stats":i['stats'],
+		"permalink":i['permalink'],
 		"text":i["text"],
+		"vertical_id":i["vertical_id"],
 		"parent_id":i["parent_id"],
-		"parent_user":parent_user,
+		#"parent_user":parent_user,
 		"entry_id":i["entry_id"],
 		"publication":"HP",
+		'nSeen':nSeen,
 		"site":"com"}
 		cc.append(dict)
 		if i["replies"]["options"]["total"]>0:
-			cc+=(getComment(i["user_id"],i["replies"]))
+			cc+=(getComment(i["replies"]))
 	return cc
+
 
 
 def getIds(url):
@@ -390,6 +441,7 @@ def getFbComment(url):
 
 
 def getUrl(url):
+	import urllib3
 	http = urllib3.PoolManager()
 	rx = http.request('GET', url).data
 	return(rx)
@@ -467,6 +519,133 @@ def writeQueue(file,output):
 
 
 
+def enterFile(url):
+	if url[0]=='/':url='http://www.huffingtonpost.com'+url
+	f = urllib2.urlopen(url)
+	data = f.read()
+	oid = fs.put(data)
+	return oid
+
+
+def identifyParents(dat2,lev,pid):
+	temp=dat2.copy()
+	new={}
+	for x in range(len(temp['models'])):
+		if temp['models'][x]['level']==(lev+1):
+			temp['models'][x]['parent_id']=pid
+
+	for x in range(len(temp['models'])):
+		d=temp['models'][x]['level']
+		for j in range(x+1,len(temp['models'])):
+			d2=temp['models'][j]['level']
+			if d2==d+1:
+				temp['models'][j]['parent_id']=temp['models'][x]['id']
+	return temp
+
+def getDescendants(i,_id):
+
+	t=i['stats']['replies']
+
+	if 'models' not in i['replies']:
+		i['replies']['models']=[]
+	if t==0:
+		return None
+
+	pid=i['id']
+	lev=i['level']
+	if i['stats']['children']==1:
+		url="http://www.huffingtonpost.com/conversations/entries/"+str(_id)+"/comments/"+str(pid)+"/descendants?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"
+		string = getUrl(url)
+		dat2=json.loads(string)#['models']
+
+	elif i['stats']['children']>1 or i['stats']['replies']>0:
+		url="http://www.huffingtonpost.com/conversations/entries/"+str(_id)+"/comments/"+str(pid)+"/replies?app_token=d6dc44cc3ddeffb09b8957cf270a845d&limit=90&order=4"		
+		string = getUrl(url)
+		dat2={}
+		try:
+			temp=json.loads(string)#['models']
+			for pp in temp:
+				dat2[pp]=temp[pp]
+		except:
+			print url
+
+
+	if i['stats']['children']==0 and i['stats']['replies']==0:
+		return None
+	try:
+		newEntries= identifyParents(dat2,lev,pid)
+	except: newEntries=dat2
+	#newEntries = identifyNSeen(newEntries,lev)
+
+	return(newEntries)
+
+def getRootCommentUrl(i,id,n,dat):
+	base="http://www.huffingtonpost.com/conversations/entries/"
+	options="order_0=1&order_1=4&limit_0="+str(n)+"&limit_1=98"
+	if i==0:
+		url=base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&"+options
+	else:
+		tg=[]
+		for x in dat["models"]:
+			tg.append(x["id"]) #+=[i["id"]]
+		target=min(tg)
+		url = base+str(id)+"/comments?app_token=d6dc44cc3ddeffb09b8957cf270a845d&filter=0&last="+str(target)+'&'+options
+	return url
+
+def getMore3(p,_id,count=10):
+	additions=getDescendants(p,_id)
+	if additions is not None: #and 'models' in additions:
+		out={} 
+		if 'users' in additions:
+			out['users']=additions['users']
+		yield out
+		if 'models' in additions:
+			for a in additions['models']:
+					if len(a['replies']['models'])>0:
+						for resid in a['replies']['models']:
+							yield resid
+							a['replies']['models']=[]
+					if a['stats']['replies']>0:
+						yield a
+						for sub in getMore3(a,_id):
+							yield a
+					else:
+						yield a
+					
+					
+def getMissingReplies(dat,users,_id):
+	counter=0
+	for t in dat['models']:
+		aa=(len(t['replies']['models']))
+		if counter%10==0:print 'added conversations for '+str(counter)+' N to go: '+str(len(dat['models']))
+		counter+=1
+		#print t['nSeen']
+		nParentReps=len([i['id'] for i in t['replies']['models'] if i['parent_id']==t['id']])
+		if t['stats']['replies']>len(t['replies']['models']):
+			if t['stats']['children']<=nParentReps:
+				for page in t['replies']['models']:
+					for hit in getMore3(page,_id):
+						if 'users' in hit:
+							users.append(hit['users'])
+						else:
+							if 'id' in hit:
+								if hit['id'] not in [i['id'] for i in t['replies']['models']]:
+									t['replies']['models'].append(hit)
+		ab=(len(t['replies']['models']))
+		if ab>aa:
+			print str(ab-aa) +' more comments added! SUCCESS!'
+	return dat,users
+
+def getUserPics(users):
+	for i in users:
+		url=i['photo_url']
+		if url[0]=='/':url='http://www.huffingtonpost.com'+url
+		i['oid']=enterFile(url)
+	return users
+
+
+
+
 # def getArticleData(url)
 # 	string <- getUrl(url)
 
@@ -490,10 +669,10 @@ def writeQueue(file,output):
 # 	return(dat)
 
 # for (i in 16:20){
-#   print (i)
-#   target <- urls[i]
-#   articles <- rbind(articles,getArticleData(target))
-#   output <- getArticle(articles$id[i])
-#   users <- rbind(users,output[[2]])
-#   entries <- rbind(entries,output[[1]])
+#	print (i)
+#	target <- urls[i]
+#	articles <- rbind(articles,getArticleData(target))
+#	output <- getArticle(articles$id[i])
+#	users <- rbind(users,output[[2]])
+#	entries <- rbind(entries,output[[1]])
 # }
