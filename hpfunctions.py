@@ -613,6 +613,7 @@ def getMore3(p,_id,count=1):
 								yield a
 						else:
 							yield a
+	else: break
 					
 					
 def getMissingReplies(dat,users,_id):
