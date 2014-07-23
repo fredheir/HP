@@ -84,9 +84,8 @@ def executeScript(d):
 			counter +=1
 			_id=todo[i]["_id"]
 			print "\nstarting file " +str(_id)
-			if counter %10==0:
-				print("Number of articles downloaded: "+str(len(metaData)))
-				print("number of files before topup: "+str(len(todo)-counter))
+			print("Number of articles downloaded: "+str(len(metaData)))
+			print("number of files before topup: "+str(len(todo)-counter))
 			if type(_id) != 'NoneType' and db.metadatadb.find({"_id":_id}).limit(1).count() ==0  and todo[i]["url"] !="none":
 				coms=commentSelector(d,_id,todo[i]["url"])
 				# getCom=0
