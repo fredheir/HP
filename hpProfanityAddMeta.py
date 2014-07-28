@@ -23,10 +23,10 @@ db.comStats.create_index('entry_id')
 db.metadatadb.create_index('category')
 errors=0
 
+print 'started'
 from hpCommentStats import getBaseStats
 counter=0
 for ent in db.metadatadb.find():
-    print 'started'
     counter+=1
     if counter%100==0:print counter
     if 'offensive' not in ent:
