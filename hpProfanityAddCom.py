@@ -99,7 +99,7 @@ results=[]
 counter=0
 togo=db.metadatadb.find({'nReplies':{'$exists':False}}).count()
 print 'len to go: %s' % togo
-for ref in db.metadatadb.find({'nReplies':{'$exists':False}}):
+for ref in db.metadatadb.find({'nReplies':{'$exists':False}},batch_size=10):
     counter+=1
     if counter %10==0: print '%s thousand seen. Percentage done: %s. N to go: %s' %(counter/float(1000),round(100*(counter/float(togo)),2),togo-counter)
     if 'nReplies' not in ref:
