@@ -97,7 +97,7 @@ def interactAndProfanity(ref):
 
 results=[]
 counter=0
-print 'len to go: %s' % db.metadatadb.find({'nReplies':{'$exists':False}})
+print 'len to go: %s' % db.metadatadb.find({'nReplies':{'$exists':False}}).count()
 for ref in db.metadatadb.find({'nReplies':{'$exists':False}}):
     counter+=1
     if counter %10==0: print str(float(counter)/1000)+' thousand seen'
