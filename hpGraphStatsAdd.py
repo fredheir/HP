@@ -18,7 +18,7 @@ def getComDat(ent):
 				names.append(str(i['user_id']))
 			if str(i['parent_user']) not in names:
 				names.append(str(i['parent_user']))
-		except KeyError:passfo
+		except KeyError:pass
 	return results,names
 
 def setupGraph(results,names):
