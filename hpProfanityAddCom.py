@@ -81,8 +81,7 @@ def interactAndProfanity(ref):
     nOrphans=len(rootComsSeen)
     nAdopted=len(rootComsUnseen)-len(rootComsSeen)
     tt=[int(i) for i in participants.keys()]
-    print tt
-    fds
+
     entry={
             'participants':[participants],
             'participantIds':[int(i) for i in tt],
@@ -99,9 +98,8 @@ def interactAndProfanity(ref):
 results=[]
 counter=0
 for ref in db.metadatadb.find():
-    counter+=1
     print counter
-    if counter %100==0: print str(float(counter)/1000)+' thousand seen'
+    if counter %10==0: print str(float(counter)/1000)+' thousand seen'
     if 'nReplies' not in ref:
         entry1= interactAndProfanity(ref)
 
