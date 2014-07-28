@@ -15,43 +15,96 @@ profanity=profanity[1:]
 db.comStats.create_index('entry_id')
 db.metadatadb.create_index('category')
 
-counter=0
-for ref in db.metadatadb.find():
+def interactAndProfanity(ref):
+    participants={}
+    rootComsSeen=[]
+    rootComsUnseen=[]
+    nReplies=nComs=0
+    nAdopted=0
+    nOrphans=0
+    nTotSeen=0
     temp1=[]
     temp2={}
-    #if ref['category'] in target:
-    counter+=1
-    if counter%100==0:print str(float(counter)/1000.0)+' thousand'
-    #if 'profNodes' not in ref:
+    
+    #part 2 
+    
+        
+    
+    
     for ent in db.comStats.find({'entry_id':ref['_id']}):
-                    #print ent['entry_id']
-                    terms=ent['words'].lower().split()
-                    found= [t for t in terms if t in profanity]
-                    #nodesCalc
-                    if len(found)>0:
-                        for i in found:
-                            if i not in temp2:
-                                temp2[i]=[]
-                            temp2[i].append(ent['created_at'])
+        #Interactions
+        nTotSeen+=1
+        if ent['parent_id']==0:
+            nComs+=1
+            rootComsSeen.append(ent['_id'])
+            rootComsUnseen.append(ent['_id'])
+        else:
+            nReplies+=1
+            if ent['parent_id'] in rootComsSeen:
+                rootComsSeen.remove(ent['parent_id'])       
+
+        if str(ent['user_id']) not in participants:
+            d={ent['user_id']:1}
+            participants[str(ent['user_id'])]=1
+        else:
+            participants[str(ent['user_id'])]+=1
+        
+        #profanity
+        terms=ent['words'].lower().split()
+        found= [t for t in terms if t in profanity]
+        #nodesCalc
+        if len(found)>0:
+            for i in found:
+                if i not in temp2:
+                    temp2[i]=[]
+                temp2[i].append(ent['created_at'])
 
 
-                    #Edges calc
-                    if len (found) >1:
-                        d=list(set(found))
-                        for i in range(len(d)):
-                            for j in d[i:]:
-                                if d[i] !=j:
-                                    try:
-                                        entry= {'created_at':ent['created_at'],
-                                            'parent_id':ent['parent_id'],
-                                            'entry_id':ent['entry_id'],
-                                            'user_id':ent['user_id'],
-                                            'source':d[i],
-                                            'target':j
-                                            }
-                                    except:pass
-                                    temp1.append(entry)
-    db.metadatadb.update({'_id':ref['_id']},{'$set':{
-'profEdges':temp1,
-'profNodes':temp2
-}})
+        #Edges calc
+        if len (found) >1:
+            d=list(set(found))
+            for i in range(len(d)):
+                for j in d[i:]:
+                    if d[i] !=j:
+                        #try:
+                            entry= {'created_at':ent['created_at'],
+                                'parent_id':ent['parent_id'],
+                                'entry_id':ent['entry_id'],
+                                'user_id':ent['user_id'],
+                                'source':d[i],
+                                'target':j
+                                }
+                        #except:pass
+                            temp1.append(entry)                
+                
+                
+    nOrphans=len(rootComsSeen)
+    nAdopted=len(rootComsUnseen)-len(rootComsSeen)
+    tt=[i.keys() for i in entry1['participants']][0]
+
+    entry={
+            'participants':[participants],
+            'participantIds':[int(i) for i in tt],
+           'nCommenters':len(participants),
+           'nReplies':nReplies,
+           'nComsSeen':nComs,
+           'nAdoptedComs':nAdopted,
+           'nOrphanComs':nOrphans,
+            'profEdges':temp1,
+            'profNodes':temp2
+           }    
+    return entry
+
+results=[]
+counter=0
+for ref in db.metadatadb.find():
+    counter+=1
+    print counter
+    if counter %100==0: print str(float(counter)/1000)+' thousand seen'
+    if 'nReplies' not in ref:
+        entry1= interactAndProfanity(ref)
+
+
+        db.metadatadb.update({'_id':ref['_id']},{'$set':entry1})
+#N unique commenters
+#repliesto comments on roots
