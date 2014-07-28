@@ -5,7 +5,7 @@ from hpfunctions import getUrl, stripWhite,stripWhiteList
 from lxml import html
 from hpfunctions import file_contents
 client=MongoClient()
-db=client['hp2']
+db=client['hp3']
 print db.comStats.find().count()
 
 #FOR working with data about profanity
