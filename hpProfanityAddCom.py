@@ -98,6 +98,7 @@ def interactAndProfanity(ref):
 results=[]
 counter=0
 for ref in db.metadatadb.find():
+    counter+=1
     print counter
     if counter %10==0: print str(float(counter)/1000)+' thousand seen'
     if 'nReplies' not in ref:
