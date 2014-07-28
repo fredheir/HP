@@ -24,7 +24,10 @@ db.metadatadb.create_index('category')
 errors=0
 
 from hpCommentStats import getBaseStats
+counter=0
 for ent in db.metadatadb.find():
+    counter+=1
+    if counter%100==0:print counter
     if 'offensive' not in ent:
         if len(ent['body'])==0:
             errors+=1
