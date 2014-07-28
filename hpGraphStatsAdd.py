@@ -4,7 +4,7 @@ from hpfunctions import getUrl, stripWhite,stripWhiteList
 from lxml import html
 from igraph import *
 client=MongoClient()
-db=client['hp2']
+db=client['hp3']
 
 def getComDat(ent):
 	results=[]
