@@ -97,9 +97,10 @@ def interactAndProfanity(ref):
 
 results=[]
 counter=0
+curs=db.metadatadb.find({'nReplies':{'$exists':False}},timeout=False)
 togo=db.metadatadb.find({'nReplies':{'$exists':False}}).count()
 print 'len to go: %s' % togo
-for ref in db.metadatadb.find({'nReplies':{'$exists':False}},batch_size=10):
+for ref in curs:
     counter+=1
     if counter %10==0: print '%s thousand seen. Percentage done: %s. N to go: %s' %(counter/float(1000),round(100*(counter/float(togo)),2),togo-counter)
     if 'nReplies' not in ref:
@@ -107,5 +108,6 @@ for ref in db.metadatadb.find({'nReplies':{'$exists':False}},batch_size=10):
 
 
         db.metadatadb.update({'_id':ref['_id']},{'$set':entry1})
+curs.close()
 #N unique commenters
 #repliesto comments on roots
