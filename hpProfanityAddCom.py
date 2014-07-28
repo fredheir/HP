@@ -101,7 +101,7 @@ togo=db.metadatadb.find({'nReplies':{'$exists':False}}).count()
 print 'len to go: %s' % togo
 for ref in db.metadatadb.find({'nReplies':{'$exists':False}}):
     counter+=1
-    if counter %10==0: print '%s thousand seen. Percentage done: %s. N to go: %s' %(float(counter)/1000),round(100*(counter/float(togo)),2),togo-counter)
+    if counter %10==0: print '%s thousand seen. Percentage done: %s. N to go: %s' %(counter/float(1000),round(100*(counter/float(togo)),2),togo-counter)
     if 'nReplies' not in ref:
         entry1= interactAndProfanity(ref)
 
