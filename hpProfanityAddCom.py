@@ -80,8 +80,9 @@ def interactAndProfanity(ref):
                 
     nOrphans=len(rootComsSeen)
     nAdopted=len(rootComsUnseen)-len(rootComsSeen)
-    tt=[i.keys() for i in participants][0]
-
+    tt=[int(i) for i in participants.keys()]
+    print tt
+    fds
     entry={
             'participants':[participants],
             'participantIds':[int(i) for i in tt],
