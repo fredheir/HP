@@ -69,8 +69,8 @@ def getLayout(g):
 #add parent_user
 counter=0
 
-print db.metadatadb.find({'g_density':{'$exists':False}}).count()
-curs=db.metadatadb.find({'g_density':{'$exists':False}},timeout=False)
+print db.metadatadb.find({'redone':{'$exists':False}}).count()
+curs=db.metadatadb.find({'redone':{'$exists':False}},timeout=False)
 for ent in curs:
     counter+=1
     if counter %10==0:print '%s thousand done' %(counter/float(1000))
@@ -93,7 +93,8 @@ for ent in curs:
             #vs= getLayout(g)
             temp=getGraphStats(g)
             temp['id']=ent['_id']
-            temp['timestamp']=ent['timestamp']          
+            temp['timestamp']=ent['timestamp']     
+            temp['redone']='aug'     
             db.metadatadb.update({'_id':ent['_id']},{'$set':temp})
         #except:print 'error'
 curs.close()
