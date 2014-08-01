@@ -73,7 +73,7 @@ print db.metadatadb.find({'redone':{'$exists':False}}).count()
 curs=db.metadatadb.find({'redone':{'$exists':False}},timeout=False)
 for ent in curs:
     counter+=1
-    if counter %10==0:print '%s thousand done' %(counter/float(1000))
+    if counter %1000==0:print '%s thousand done' %(counter/float(1000))
     ent['comments']=[]
 
     for i in db.comStats.find({'entry_id':ent['_id']}):
