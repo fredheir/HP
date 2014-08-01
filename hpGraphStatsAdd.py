@@ -84,9 +84,9 @@ for ent in curs:
                 pu= db.comStats.find({'_id':target})[0]['user_id']
                 db.comStats.update({'_id':i['_id']},{'$set':{'parent_user':pu}})
         ent['comments'].append(i)
-    #results,names=getComDat(ent)
+    results,names=getComDat(ent)
     #results=[i for i in results if i[1] != '0']
-    names=[i for i in names if i != '0']
+    #names=[i for i in names if i != '0']
     if counter>0:
         #try:
             g=setupGraph(results,names)
