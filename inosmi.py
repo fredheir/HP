@@ -48,7 +48,7 @@ def getPage(mn,verbose=0):
         if len(targets)==0:
             cont=0
             print 'all done here! moving on'
-        if len(targets)>0 and db[targetDb].find({'url':url}).count()==0:
+        if len(targets)>0 and db[targetDb].find({'url':targets[0]}).count()==0:
             print 'New targets found!: '+str(len(targets))+' links to go '+url
             pn+=1
             for target in targets:
