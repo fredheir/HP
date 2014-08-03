@@ -51,7 +51,6 @@ def izvDate(date,year):
 
 
 def getIzvComs(_id,year):
-    _id=560985
     import json
     #nPages=1
     n=0

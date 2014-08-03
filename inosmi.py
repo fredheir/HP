@@ -201,15 +201,18 @@ def getAllComments(comments):
 
 
 # In[ ]:
-target= db[targetDb].aggregate( [ 
-                    { '$group': { '_id':0, 'maxid': { '$max': "$_id"} } }
-                    ] )
-maxid= target['result'][0]['maxid']
-temp=db[targetDb].find({'_id':maxid})[0]['date']
-d,m,y=temp.split('/')
-keep=[]
+# target= db[targetDb].aggregate( [ 
+#                     { '$group': { '_id':0, 'maxid': { '$max': "$_id"} } }
+#                     ] )
+# maxid= target['result'][0]['maxid']
+# temp=db[targetDb].find({'_id':maxid})[0]['date']
+# d,m,y=temp.split('/')
+# keep=[]
+# d=int(str(y)+str(m))
 
-d=int(str(y)+str(m))
+import time
+d= (time.strftime("%Y%m"))
+
 print d
 while True:
     getPage(d,verbose=1)
