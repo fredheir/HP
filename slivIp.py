@@ -49,5 +49,4 @@ for i in db[targetDb].find({'sIp':{'$exists':False}}):
         'recipient':c,
         'rIp':d,
          }
-    print ent
     db[targetDb].update({'_id':i['_id']},{'$set':ent})
