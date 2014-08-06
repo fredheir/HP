@@ -42,11 +42,13 @@ db = client['slivmail']
 for i in db[targetDb].find({'sIp':{'$exists':False}},timeout=False):
     print i['_id']
     url='http://slivmail.com/messages/original/'+str(i['_id'])
-    a,b,c,d=getIps(url)
-    ent={
-        'sender':a,
-        'sIp':b,
-        'recipient':c,
-        'rIp':d,
-         }
-    db[targetDb].update({'_id':i['_id']},{'$set':ent})
+    try:
+        a,b,c,d=getIps(url)
+        ent={
+            'sender':a,
+            'sIp':b,
+            'recipient':c,
+            'rIp':d,
+             }
+        db[targetDb].update({'_id':i['_id']},{'$set':ent})
+    except:pass
