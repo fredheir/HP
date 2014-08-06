@@ -39,7 +39,7 @@ client = MongoClient()
 targetDb='data'
 db = client['slivmail']
 
-for i in db[targetDb].find({'sIp':{'$exists':False}}):
+for i in db[targetDb].find({'sIp':{'$exists':False}},timeout=False):
     print i['_id']
     url='http://slivmail.com/messages/original/'+str(i['_id'])
     a,b,c,d=getIps(url)
